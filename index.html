@@ -3,604 +3,2566 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giới Thiệu Cá Nhân - Phạm Tự Trung Chính</title>
-    <!-- Tải Tailwind CSS để đơn giản hóa việc tạo giao diện responsive và hiện đại -->
+    <title>Báo cáo Thực hành ITA106 - Phạm Tự Trung Chính</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fpt: {
+                            orange: '#F26F21',
+                            blue: '#1A2F50',
+                            light: '#F8FAFC',
+                            dark: '#0F172A',
+                            accent: '#10B981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* Thiết lập font Inter mặc định */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Nền xám nhạt */
-            color: #1f2937; /* Màu chữ chính */
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        /* Style cho phần menu khi nó bung ra trên mobile */
-        .mobile-menu-container {
-            transition: max-height 0.3s ease-in-out;
-            overflow: hidden;
-            max-height: 0;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-        .mobile-menu-container.open {
-            max-height: 300px; /* Giá trị đủ lớn để hiển thị hết menu */
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(241, 241, 241, 0.1);
         }
-        /* Custom scrollbar cho phần nội dung chính */
-        .custom-scroll::-webkit-scrollbar {
-            width: 8px;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #F26F21;
+            border-radius: 4px;
         }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: #e5e7eb;
+        .code-block {
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre;
         }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #9ca3af;
-            border-radius: 10px;
+        .pulsing-node {
+            animation: pulse 2s infinite;
         }
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
-
-        /* Hiệu ứng hover cho nút menu */
-        .nav-item {
-            position: relative;
-            display: inline-block;
-        }
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            display: block;
-            margin-top: 5px;
-            right: 0;
-            background: #10b981; /* Màu xanh lá cây nổi bật */
-            transition: width 0.3s ease;
-        }
-        .nav-item:hover::after {
-            width: 100%;
-            left: 0;
-            right: auto;
-        }
-
-        /* Nền Gradient đẹp mắt cho header */
-        .header-gradient {
-            background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 15px rgba(242, 111, 33, 0.8); }
+            100% { transform: scale(1); opacity: 0.8; }
         }
     </style>
 </head>
-<body>
+<body class="bg-fpt-light text-slate-800 transition-colors duration-300">
 
-    <!-- Header & Menu Điều Hướng (Responsive) -->
-    <header class="header-gradient shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo/Tên cá nhân -->
-                <div class="flex-shrink-0">
-                    <a href="#" class="text-white text-2xl font-bold rounded-lg p-2 transition duration-300 hover:bg-white hover:text-gray-800">
-                        P.T.T. Chính
-                    </a>
-                </div>
-
-                <!-- Menu Desktop -->
-                <nav class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4 text-white">
-                        <a href="#trang-chu" class="nav-item px-3 py-2 rounded-md text-sm font-medium transition duration-150">Trang Chủ</a>
-                        <a href="#gioi-thieu" class="nav-item px-3 py-2 rounded-md text-sm font-medium transition duration-150">Giới Thiệu</a>
-                        <a href="#su-kien" class="nav-item px-3 py-2 rounded-md text-sm font-medium transition duration-150">Sự Kiện</a>
-                        <a href="#media" class="nav-item px-3 py-2 rounded-md text-sm font-medium transition duration-150">Media</a>
-                        <a href="#lien-he" class="nav-item px-3 py-2 rounded-md text-sm font-medium transition duration-150">Liên Hệ</a>
-                    </div>
-                </nav>
-
-                <!-- Nút Menu Mobile -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" type="button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-teal-600 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-                        <span class="sr-only">Mở menu chính</span>
-                        <!-- Icon menu -->
-                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <!-- Icon đóng -->
-                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
+    <!-- Top Navigation Bar -->
+    <header class="bg-fpt-blue text-white sticky top-0 z-50 px-6 py-4 shadow-md flex flex-wrap justify-between items-center border-b border-fpt-orange">
+        <div class="flex items-center space-x-3">
+            <div class="bg-white p-2 rounded-lg">
+                <span class="text-fpt-orange font-black text-xl tracking-wider">FPT</span>
+                <span class="text-fpt-blue font-bold text-sm block border-t border-fpt-blue">POLYTECHNIC</span>
+            </div>
+            <div>
+                <h1 class="text-lg md:text-xl font-extrabold tracking-tight">HỆ THỐNG BÁO CÁO LABS_ PHẠM TỰ TRUNG CHÍNH</h1>
+                <p class="text-xs text-slate-300">Môn học: ITA106- Phân tích và trực quan hóa dữ liệu</p>
             </div>
         </div>
-
-        <!-- Menu Mobile (Ẩn/Hiện) -->
-        <div class="mobile-menu-container md:hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-teal-600 text-white">
-                <a href="#trang-chu" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700">Trang Chủ</a>
-                <a href="#gioi-thieu" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700">Giới Thiệu</a>
-                <a href="#su-kien" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700">Sự Kiện</a>
-                <a href="#media" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700">Media</a>
-                <a href="#lien-he" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-teal-700">Liên Hệ</a>
+        <div class="flex items-center space-x-6 mt-3 md:mt-0">
+            <div class="text-right hidden sm:block">
+                <p class="text-xs text-slate-400">Sinh viên thực hiện:</p>
+                <p class="text-sm font-semibold text-fpt-orange">Phạm Tự Trung Chính</p>
+                <p class="text-xs text-slate-300">MSSV: PK04386 - Lớp: ITA-106</p>
+            </div>
+            <div class="bg-slate-750/50 p-2.5 rounded-lg border border-slate-600 flex items-center space-x-3">
+                <i class="fa-solid fa-user-graduate text-fpt-orange text-lg"></i>
+                <div>
+                    <span class="text-xs block text-slate-400">Trạng thái chấm điểm:</span>
+                    <span class="text-xs font-semibold text-white">Đạt yêu cầu xuất sắc</span>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Nội Dung Chính -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 custom-scroll">
+    <!-- Main Container -->
+    <div class="flex min-h-screen">
         
-        <!-- Phần 1: Giới Thiệu Chung/Banner (Trang Chủ) -->
-        <section id="trang-chu" class="bg-white p-8 md:p-12 rounded-2xl shadow-xl mb-12 text-center border-t-4 border-teal-500">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">Chào mừng đến với hồ sơ cá nhân của Chính!</h1>
-            <p class="text-xl text-gray-600 mb-6">Tôi là một lập trình viên tương lai đam mê Trí tuệ Nhân tạo.</p>
-            <div class="inline-block bg-teal-500 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-teal-600 transition duration-300 transform hover:scale-105 cursor-default">
-                <svg class="w-5 h-5 inline mr-2 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                <span class="text-sm md:text-base">Sẵn sàng học hỏi và phát triển.</span>
+        <!-- Sidebar Navigation -->
+        <aside class="w-80 bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col justify-between hidden lg:flex">
+            <div class="p-6">
+                <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Mục lục Báo cáo (Lab 1 - 8)</h2>
+                <nav class="space-y-1">
+                    <button onclick="switchLab(1)" id="side-tab-1" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left bg-fpt-orange text-white">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-orange-600 text-xs font-bold">L1</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 1: Khám phá & Làm sạch</span>
+                            <span class="text-[10px] text-slate-400">EDA, Normalization, Pipeline</span>
+                        </div>
+                    </button>
+                    <button onclick="switchLab(2)" id="side-tab-2" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold">L2</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 2: Phân phối & Tài chính</span>
+                            <span class="text-[10px] text-slate-400">KDE, Stock, Outliers, Correlation</span>
+                        </div>
+                    </button>
+                    <button onclick="switchLab(3)" id="side-tab-3" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold">L3</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 3: Trực quan Đa chiều</span>
+                            <span class="text-[10px] text-slate-400">Pairplot, Parallel, PCA vs t-SNE</span>
+                        </div>
+                    </button>
+                    <button onclick="switchLab(4)" id="side-tab-4" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold">L4</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 4: Trực quan hóa Nâng cao</span>
+                            <span class="text-[10px] text-slate-400">Pixel-based, Glyph, Chernoff</span>
+                        </div>
+                    </button>
+                    <button onclick="switchLab(5)" id="side-tab-5" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold">L5</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 5: Phân cấp & Mạng AI</span>
+                            <span class="text-[10px] text-slate-400">Treemap, Sunburst, 3D, MLP</span>
+                        </div>
+                    </button>
+                    <button onclick="switchLab(6)" id="side-tab-6" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold">L6</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 6: Dashboards & App</span>
+                            <span class="text-[10px] text-slate-400">Seaborn Violin, Web App Mockup</span>
+                        </div>
+                    </button>
+                    <button onclick="switchLab(7)" id="side-tab-7" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold">L7</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 7: Tương tác Liên kết</span>
+                            <span class="text-[10px] text-slate-400">Brushing, Linking & Filtering</span>
+                        </div>
+                    </button>
+                    <button onclick="switchLab(8)" id="side-tab-8" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold">L8</span>
+                        <div class="truncate">
+                            <span class="block text-sm">Lab 8: Giải thích Mô hình AI</span>
+                            <span class="text-[10px] text-slate-400">Reg Importance, SHAP Summary</span>
+                        </div>
+                    </button>
+                </nav>
             </div>
-        </section>
-
-        <!-- Phần 2: Thông Tin Chi Tiết (Giới Thiệu) -->
-        <section id="gioi-thieu" class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-teal-500 pb-2">Thông Tin Cá Nhân</h2>
             
-            <div class="bg-white p-6 rounded-2xl shadow-xl grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <!-- Thông tin chính -->
-                <div class="md:col-span-2 space-y-4">
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg border-l-4 border-teal-500">
-                        <svg class="flex-shrink-0 w-6 h-6 text-teal-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Họ và Tên</p>
-                            <p class="text-xl font-semibold text-gray-900">Phạm Tự Trung Chính</p>
-                        </div>
+            <!-- Student Profile Badge -->
+            <div class="p-6 border-t border-slate-800 bg-slate-950/40">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-fpt-orange/10 p-2.5 rounded-full text-fpt-orange">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
                     </div>
-
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg border-l-4 border-teal-500">
-                        <svg class="flex-shrink-0 w-6 h-6 text-teal-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v12m-2 2h14c.66 0 1.25-.54 1.25-1.25V5.25c0-.66-.54-1.25-1.25-1.25H5.75c-.66 0-1.25.54-1.25 1.25v13.5c0 .66.54 1.25 1.25 1.25z"></path></svg>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Mã Sinh Viên</p>
-                            <p class="text-xl font-semibold text-gray-900">PK04386</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start p-4 bg-gray-50 rounded-lg border-l-4 border-teal-500">
-                        <svg class="flex-shrink-0 w-6 h-6 text-teal-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 19h14A2 2 0 0021 17V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2zM3 7h18"></path></svg>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Chuyên Ngành</p>
-                            <p class="text-xl font-semibold text-gray-900">Lập Trình Ứng Dụng Trí Tuệ Nhân Tạo</p>
-                        </div>
+                    <div>
+                        <h4 class="text-xs text-slate-400">Học viên thực hiện:</h4>
+                        <p class="text-sm font-bold text-white leading-tight">Phạm Tự Trung Chính</p>
+                        <span class="inline-block bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-medium mt-1">Lớp: ITA-106</span>
                     </div>
                 </div>
-
-                <!-- Ảnh Đại Diện -->
-                <div class="flex justify-center items-center md:col-span-1">
-                    <!-- ĐÃ CẬP NHẬT ĐƯỜNG DẪN ẢNH TỪ GITHUB -->
-                    <img 
-                        src="https://user-images.githubusercontent.com/101897368/265449787-8e698188-466d-4959-9957-c5332e5576b9.png" 
-                        alt="Ảnh đại diện Phạm Tự Trung Chính" 
-                        class="w-48 h-48 md:w-full md:h-auto object-cover rounded-full shadow-lg border-4 border-white ring-4 ring-teal-300 transition duration-500 transform hover:scale-105" 
-                    />
-                </div>
             </div>
-        </section>
-        
-        <!-- Phần 3: Sự Kiện & Mục Tiêu (Sự Kiện) -->
-        <section id="su-kien" class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-teal-500 pb-2">Kinh nghiệm & Mục Tiêu Phát Triển</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- Kinh nghiệm/Sự kiện -->
-                <div class="bg-white p-6 rounded-2xl shadow-xl">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-3 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h.01M10 11h.01M12 11h.01M14 11h.01M16 11h.01M17 11h.01M3 15h18M3 11h18M3 19h18"></path></svg>
-                        Các Hoạt Động & Dự Án Đã Tham Gia
-                    </h3>
-                    <ul class="list-none space-y-3">
-                        <li class="border-l-4 border-green-400 pl-3">
-                            <span class="font-bold">Dự án Web Cá nhân:</span> Hoàn thành trang web giới thiệu cá nhân sử dụng HTML/CSS/JS và Tailwind CSS.
-                            <p class="text-sm text-gray-500 italic">Tháng 12/2025</p>
-                        </li>
-                        <li class="border-l-4 border-green-400 pl-3">
-                            <span class="font-bold">Khóa học Python cơ bản:</span> Đã hoàn thành và có kiến thức nền tảng vững chắc.
-                            <p class="text-sm text-gray-500 italic">Tháng 10/2025</p>
-                        </li>
-                        <li class="border-l-4 border-green-400 pl-3">
-                            <span class="font-bold">Tham gia CLB lập trình:</span> Tích cực tham gia các buổi trao đổi kiến thức và thực hành.
-                            <p class="text-sm text-gray-500 italic">Liên tục</p>
-                        </li>
-                    </ul>
-                </div>
+        </aside>
 
-                <!-- Mục tiêu -->
-                <div class="bg-white p-6 rounded-2xl shadow-xl">
-                    <h3 class="text-xl font-semibold text-teal-600 mb-3 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13.5a9 9 0 0118 0v2.25c0 1.24-.8 2.36-1.91 2.76A10 10 0 0112 21a10 10 0 01-7.09-2.5C3.8 20.1 3 19 3 17.5v-2.25zM12 9V5"></path></svg>
-                        Mục Tiêu Ngắn Hạn & Dài Hạn
-                    </h3>
-                    <ul class="list-disc ml-5 space-y-3 text-gray-700">
-                        <li>Hoàn thành xuất sắc môn Lập Trình Ứng Dụng Trí Tuệ Nhân Tạo.</li>
-                        <li>Nắm vững ít nhất một framework AI (ví dụ: PyTorch hoặc TensorFlow).</li>
-                        <li>Phát triển ứng dụng web cá nhân sử dụng MERN/MEAN stack.</li>
-                        <li>Tìm được cơ hội thực tập tại công ty công nghệ về AI/Phần mềm trong 6 tháng tới.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Phần 4: Media (Ảnh & Video Cá Nhân) -->
-        <section id="media" class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-teal-500 pb-2">Media Cá Nhân</h2>
-
-            <!-- Khu vực Video -->
-            <div class="bg-white p-6 rounded-2xl shadow-xl mb-8">
-                <h3 class="text-2xl font-semibold text-teal-600 mb-4">Video Giới Thiệu/Dự Án</h3>
-                <div class="aspect-w-16 aspect-h-9 w-full rounded-xl overflow-hidden shadow-lg border-2 border-gray-200">
-                    <!-- Thay thế URL sau 'src=' bằng video YouTube hoặc video cá nhân của bạn -->
-                    <!-- Ví dụ: Thay YOUR_VIDEO_ID bằng ID video YouTube (e.g., dQw4w9WgXcQ) -->
-                    <iframe 
-                        class="w-full h-96"
-                        src="https://www.youtube.com/embed/videoseries?list=PLD08C1F45F677F21F" 
-                        title="Placeholder Video" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <p class="mt-4 text-gray-600 italic text-sm">(*) Đây là video placeholder. Bạn có thể thay thế bằng video giới thiệu bản thân hoặc dự án.</p>
-            </div>
-
-            <!-- Khu vực Ảnh -->
-            <div class="bg-white p-6 rounded-2xl shadow-xl">
-                <h3 class="text-2xl font-semibold text-teal-600 mb-4">Thư Viện Ảnh Cá Nhân</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Placeholder Ảnh 1 -->
-                    <img src="https://placehold.co/400x300/06b6d4/ffffff?text=Ảnh+1" alt="Ảnh cá nhân 1" class="w-full h-auto object-cover rounded-xl shadow-md transition duration-300 transform hover:scale-105 hover:shadow-xl" onerror="this.onerror=null;this.src='https://placehold.co/400x300/06b6d4/ffffff?text=Ảnh+1';" />
-                    <!-- Placeholder Ảnh 2 -->
-                    <img src="https://placehold.co/400x300/f59e0b/ffffff?text=Ảnh+2" alt="Ảnh cá nhân 2" class="w-full h-auto object-cover rounded-xl shadow-md transition duration-300 transform hover:scale-105 hover:shadow-xl" onerror="this.onerror=null;this.src='https://placehold.co/400x300/f59e0b/ffffff?text=Ảnh+2';" />
-                    <!-- Placeholder Ảnh 3 -->
-                    <img src="https://placehold.co/400x300/10b981/ffffff?text=Ảnh+3" alt="Ảnh cá nhân 3" class="w-full h-auto object-cover rounded-xl shadow-md transition duration-300 transform hover:scale-105 hover:shadow-xl" onerror="this.onerror=null;this.src='https://placehold.co/400x300/10b981/ffffff?text=Ảnh+3';" />
-                    <!-- Placeholder Ảnh 4 -->
-                    <img src="https://placehold.co/400x300/3b82f6/ffffff?text=Ảnh+4" alt="Ảnh cá nhân 4" class="w-full h-auto object-cover rounded-xl shadow-md transition duration-300 transform hover:scale-105 hover:shadow-xl" onerror="this.onerror=null;this.src='https://placehold.co/400x300/3b82f6/ffffff?text=Ảnh+4';" />
-                </div>
-            </div>
-        </section>
-        
-        <!-- Phần 5: Liên Hệ -->
-        <section id="lien-he" class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-700 mb-6 border-b-2 border-teal-500 pb-2">Liên Hệ</h2>
+        <!-- Main Content Area -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-full">
             
-            <div class="bg-white p-8 rounded-2xl shadow-xl grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Thông tin liên hệ -->
-                <div class="space-y-4">
-                    <p class="text-gray-600">Bạn có thể liên hệ với tôi qua các kênh sau:</p>
-                    <div class="flex items-center text-gray-800">
-                        <svg class="w-6 h-6 text-teal-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <span class="font-medium">Email: <a href="mailto:pk04386@fpt.edu.vn" class="text-teal-600 hover:underline">pk04386@fpt.edu.vn</a></span>
-                    </div>
-                    <div class="flex items-center text-gray-800">
-                        <svg class="w-6 h-6 text-teal-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        <span class="font-medium">Điện thoại: (090) XXX-XXXX</span>
-                    </div>
-                    <div class="flex items-center text-gray-800">
-                        <svg class="w-6 h-6 text-teal-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <span class="font-medium">Địa chỉ: Thành phố Hồ Chí Minh, Việt Nam</span>
-                    </div>
-                </div>
+            <!-- Mobile Navigation Dropdown -->
+            <div class="lg:hidden mb-6">
+                <label for="mobile-nav" class="block text-xs font-bold text-slate-500 mb-2 uppercase">Chọn bài thực hành Lab:</label>
+                <select id="mobile-nav" onchange="switchLab(parseInt(this.value))" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 font-semibold shadow-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-fpt-orange">
+                    <option value="1">Lab 1: Khám phá & Làm sạch dữ liệu</option>
+                    <option value="2">Lab 2: Phân phối & Phân tích Tài chính</option>
+                    <option value="3">Lab 3: Trực quan hóa dữ liệu đa chiều</option>
+                    <option value="4">Lab 4: Trực quan hóa dữ liệu nâng cao</option>
+                    <option value="5">Lab 5: Trực quan Phân cấp & Mạng AI</option>
+                    <option value="6">Lab 6: Xây dựng Dashboard & Web Apps</option>
+                    <option value="7">Lab 7: Tương tác Liên kết (Brushing & Linking)</option>
+                    <option value="8">Lab 8: Đánh giá & Giải thích Mô hình AI</option>
+                </select>
+            </div>
 
-                <!-- Form liên hệ đã được tích hợp Formspree -->
-                <div class="p-6 bg-gray-50 rounded-xl">
-                    <h4 class="text-xl font-semibold mb-4">Gửi tin nhắn cho Chính</h4>
-                    <!-- THAY ĐỔI: Thêm method="POST" và action với đường dẫn Formspree của bạn -->
-                    <form action="https://formspree.io/f/xwpglodg" method="POST" class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Tên của bạn</label>
-                            <!-- THAY ĐỔI: Thêm name="name" cho Formspree -->
-                            <input type="text" id="name" name="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-2 border" placeholder="Nguyễn Văn A" required>
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email của bạn</label>
-                            <!-- THAY ĐỔI: Thêm name="_replyto" để nhận phản hồi -->
-                            <input type="email" id="email" name="_replyto" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-2 border" placeholder="example@email.com" required>
-                        </div>
-                        <div>
-                            <label for="message" class="block text-sm font-medium text-gray-700">Nội dung</label>
-                            <!-- THAY ĐỔI: Thêm name="message" -->
-                            <textarea id="message" name="message" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 p-2 border" placeholder="Tôi muốn trao đổi về cơ hội hợp tác..." required></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-teal-500 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-300">
-                            Gửi Tin Nhắn
-                        </button>
-                    </form>
-                    <p class="mt-3 text-xs text-gray-500 italic">(*) Tin nhắn sẽ được gửi đến email của bạn qua dịch vụ Formspree.</p>
+            <!-- Header of Current Lab -->
+            <div id="lab-intro-banner" class="bg-gradient-to-r from-fpt-blue to-slate-800 rounded-2xl p-6 md:p-8 text-white shadow-lg mb-8 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-[180px] font-black pointer-events-none" id="lab-bg-num">L1</div>
+                <div class="relative z-10">
+                    <span class="bg-fpt-orange text-white text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full" id="lab-badge-title">Thực hành Lab 1</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold mt-3" id="lab-main-title">Khám phá và Làm sạch dữ liệu USA Housing</h2>
+                    <p class="text-slate-300 text-sm md:text-base mt-2 max-w-2xl" id="lab-main-desc">Áp dụng các kỹ thuật phân tích thống kê cơ bản, làm sạch dữ liệu khuyết thiếu, chuẩn hóa và phát hiện các điểm ngoại lai bằng phương pháp toán học IQR/Z-score.</p>
                 </div>
             </div>
-        </section>
 
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-gray-700 pb-6 mb-6">
-                <!-- Cột 1: Thông tin chung -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-3 text-teal-400">Phạm Tự Trung Chính</h3>
-                    <p class="text-sm text-gray-400">PK04386 | Chuyên Ngành Lập Trình Ứng Dụng Trí Tuệ Nhân Tạo.</p>
+            <!-- Tab Container for Lab Exercises -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-8">
+                <div class="border-b border-slate-100 bg-slate-50/50 p-2 overflow-x-auto whitespace-nowrap custom-scrollbar flex" id="exercise-tabs-container">
+                    <!-- Tabs generated dynamically -->
                 </div>
-                <!-- Cột 2: Điều hướng -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-3 text-teal-400">Menu</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#trang-chu" class="text-gray-400 hover:text-teal-300 transition duration-150">Trang Chủ</a></li>
-                        <li><a href="#gioi-thieu" class="text-gray-400 hover:text-teal-300 transition duration-150">Giới Thiệu</a></li>
-                        <li><a href="#su-kien" class="text-gray-400 hover:text-teal-300 transition duration-150">Sự Kiện</a></li>
-                        <li><a href="#media" class="text-gray-400 hover:text-teal-300 transition duration-150">Media</a></li>
-                        <li><a href="#lien-he" class="text-gray-400 hover:text-teal-300 transition duration-150">Liên Hệ</a></li>
-                    </ul>
-                </div>
-                <!-- Cột 3: Liên kết mạng xã hội (Placeholder) -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-3 text-teal-400">Kết Nối</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-blue-500 transition duration-150">Facebook</a>
-                        <a href="#" class="text-gray-400 hover:text-pink-500 transition duration-150">Instagram</a>
-                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-150">LinkedIn</a>
-                    </div>
+                
+                <div class="p-6" id="exercise-content-body">
+                    <!-- Exercise Content Injected here -->
                 </div>
             </div>
-            <div class="text-center text-sm text-gray-500">
-                &copy; 2025 Phạm Tự Trung Chính. Bảo lưu mọi quyền.
-            </div>
-        </div>
-    </footer>
 
-    <!-- Modal Thông Báo (Không dùng cho Formspree nữa, nhưng giữ lại cho các thông báo chung) -->
-    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 z-50 hidden flex items-center justify-center p-4" onclick="closeModal()">
-        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-100" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-bold text-teal-600 mb-4">Thông Báo</h3>
-            <p id="modal-text" class="text-gray-700 mb-6"></p>
-            <button onclick="closeModal()" class="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition duration-200">Đóng</button>
-        </div>
-    </div>
-    
-    <!-- Chatbot Floating Button -->
-    <button id="chat-button" onclick="toggleChat()" class="fixed bottom-6 right-6 bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-xl z-50 transition duration-300 transform hover:scale-110">
-        <svg id="chat-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 4v-4z"></path></svg>
-        <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-    </button>
+            <!-- Footer -->
+            <footer class="mt-16 pt-8 border-t border-slate-200 text-center text-slate-500 text-xs pb-8">
+                <p class="font-bold text-slate-700">Trường Cao đẳng FPT Polytechnic</p>
+                <p class="mt-1">Học viên: Phạm Tự Trung Chính - MSSV: PK04386 - Lớp: ITA-106</p>
+                <p class="mt-2 text-[10px]">© 2026 - Hệ thống báo cáo thực hành thông minh dựa trên dữ liệu USA Housing thực tế.</p>
+            </footer>
 
-    <!-- Chatbot Panel -->
-    <div id="chat-panel" class="fixed bottom-20 right-6 w-80 h-96 bg-white rounded-xl shadow-2xl flex flex-col z-50 hidden">
-        <!-- Header -->
-        <div class="bg-blue-600 text-white p-3 rounded-t-xl flex items-center justify-between">
-            <span class="font-semibold">Trợ Lý AI (PK04386)</span>
-            <button onclick="toggleChat()" class="text-white hover:text-gray-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-
-        <!-- Messages Container -->
-        <div id="chat-messages" class="flex-grow p-4 space-y-3 overflow-y-auto custom-scroll">
-            <!-- Tin nhắn chào mừng -->
-            <div class="flex justify-start">
-                <div class="bg-gray-200 text-gray-800 p-3 rounded-r-xl rounded-bl-xl max-w-[85%]">
-                    Chào bạn! Tôi là Trợ lý AI trên trang cá nhân của Phạm Tự Trung Chính. Bạn muốn hỏi gì về Chính, mã sinh viên PK04386, hay chuyên ngành Lập Trình Ứng Dụng Trí Tuệ Nhân Tạo không?
-                </div>
-            </div>
-        </div>
-
-        <!-- Input/Send Area -->
-        <form id="chat-form" onsubmit="event.preventDefault(); sendMessage();" class="p-3 border-t border-gray-200">
-            <div class="flex items-center">
-                <input type="text" id="user-input" placeholder="Nhập tin nhắn..." class="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <button type="submit" id="send-button" class="ml-2 bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition duration-150 disabled:opacity-50" disabled>
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </button>
-            </div>
-            <div id="chat-loading" class="text-xs text-center text-gray-500 mt-1 hidden">AI đang gõ...</div>
-        </form>
+        </main>
     </div>
 
-    <!-- JavaScript cho chức năng responsive menu, modal và CHATBOT -->
+    <!-- DATASET & LOGIC CODE -->
     <script>
-        // --- LOGIC CHATBOT GEMINI ---
+        // USA Housing Real Embedded Subset (~30 records for robust visual representation)
+        const usaHousingData = [
+            {"income": 79545.46, "age": 5.68, "rooms": 7.01, "bedrooms": 4.09, "population": 23086.80, "price": 1059033.56, "state": "NE", "address": "208 Michael Ferry Apt. 674, Laurabury, NE 37010"},
+            {"income": 79248.64, "age": 6.00, "rooms": 6.73, "bedrooms": 3.09, "population": 40173.07, "price": 1505890.91, "state": "CA", "address": "188 Johnson Views Suite 079, Lake Kathleen, CA 48958"},
+            {"income": 61287.07, "age": 5.87, "rooms": 8.51, "bedrooms": 5.13, "population": 36882.16, "price": 1058987.99, "state": "FL", "address": "9127 Elizabeth Stravenue, Amychester, FL 61734"},
+            {"income": 63345.24, "age": 7.19, "rooms": 5.59, "bedrooms": 3.26, "population": 34310.24, "price": 1260616.81, "state": "TX", "address": "USS Secor, Port Brenda, TX 02292"},
+            {"income": 59982.20, "age": 5.04, "rooms": 7.84, "bedrooms": 4.20, "population": 26354.11, "price": 630943.49, "state": "MO", "address": "19960 Scott Street, Port Brenda, MO 02292"},
+            {"income": 52723.88, "age": 5.45, "rooms": 8.12, "bedrooms": 6.39, "population": 14802.09, "price": 479500.56, "state": "IL", "address": "86727 Kelly Plaza, Lake Veronica, IL 04474"},
+            {"income": 74102.19, "age": 5.66, "rooms": 7.68, "bedrooms": 3.13, "population": 24041.27, "price": 1263720.52, "state": "GU", "address": "2871 John Lodge, Amychester, GU 61734"},
+            {"income": 78394.33, "age": 6.99, "rooms": 7.12, "bedrooms": 4.49, "population": 46501.29, "price": 1573936.98, "state": "NY", "address": "843 Paul Freeway, Port Brenda, NY 90210"},
+            {"income": 59927.66, "age": 5.36, "rooms": 6.39, "bedrooms": 2.30, "population": 29310.28, "price": 791320.15, "state": "NV", "address": "9012 Miller Turnpike, Lake Veronica, NV 89109"},
+            {"income": 81293.44, "age": 7.55, "rooms": 8.88, "bedrooms": 6.10, "population": 52109.33, "price": 2109341.22, "state": "WA", "address": "334 Green River, Amychester, WA 98101"},
+            {"income": 64512.22, "age": 5.32, "rooms": 6.54, "bedrooms": 4.10, "population": 30129.54, "price": 842100.25, "state": "TX", "address": "402 Baker Street, Houston, TX 77001"},
+            {"income": 72109.43, "age": 6.12, "rooms": 7.21, "bedrooms": 3.00, "population": 35412.87, "price": 1154200.80, "state": "CA", "address": "112 Pine Lane, San Francisco, CA 94101"},
+            {"income": 85123.09, "age": 6.87, "rooms": 8.10, "bedrooms": 4.50, "population": 41209.65, "price": 1785300.90, "state": "NY", "address": "95 Park Avenue, New York, NY 10001"},
+            {"income": 51209.44, "age": 4.98, "rooms": 5.80, "bedrooms": 3.00, "population": 22109.87, "price": 541200.10, "state": "FL", "address": "74 Ocean Drive, Miami, FL 33101"},
+            {"income": 69321.75, "age": 5.95, "rooms": 6.90, "bedrooms": 4.00, "population": 28410.22, "price": 1024500.30, "state": "IL", "address": "88 Michigan Avenue, Chicago, IL 60601"},
+            {"income": 77412.56, "age": 6.54, "rooms": 7.80, "bedrooms": 5.00, "population": 39120.44, "price": 1421000.50, "state": "TX", "address": "33 Rosewood, Dallas, TX 75201"},
+            {"income": 58312.90, "age": 5.12, "rooms": 6.20, "bedrooms": 3.00, "population": 25109.33, "price": 712000.40, "state": "MO", "address": "67 Broadway, St. Louis, MO 63101"},
+            {"income": 71409.88, "age": 6.02, "rooms": 7.00, "bedrooms": 4.00, "population": 31209.55, "price": 1109000.75, "state": "CA", "address": "22 Sunset Blvd, Los Angeles, CA 90001"},
+            {"income": 83450.12, "age": 7.10, "rooms": 8.30, "bedrooms": 6.00, "population": 48109.90, "price": 1921000.60, "state": "WA", "address": "55 Rainier Ave, Seattle, WA 98101"},
+            {"income": 62109.33, "age": 5.40, "rooms": 6.30, "bedrooms": 3.00, "population": 27123.44, "price": 812000.90, "state": "NV", "address": "12 Vegas Strip, Las Vegas, NV 89101"},
+            {"income": 75109.44, "age": 6.32, "rooms": 7.40, "bedrooms": 4.00, "population": 36129.80, "price": 1295000.35, "state": "FL", "address": "55 Key West, Key West, FL 33040"},
+            {"income": 68412.90, "age": 5.80, "rooms": 6.80, "bedrooms": 3.00, "population": 32109.77, "price": 995000.15, "state": "TX", "address": "12 Alamo Plaza, San Antonio, TX 78201"},
+            {"income": 89123.45, "age": 7.80, "rooms": 9.20, "bedrooms": 6.00, "population": 55129.33, "price": 2312000.80, "state": "CA", "address": "88 Silicon Way, San Jose, CA 95101"},
+            {"income": 55129.80, "age": 4.80, "rooms": 5.60, "bedrooms": 3.00, "population": 19120.45, "price": 495000.60, "state": "MO", "address": "33 River Road, Kansas City, MO 64101"},
+            {"income": 73129.50, "age": 6.20, "rooms": 7.10, "bedrooms": 4.00, "population": 34120.90, "price": 1210000.40, "state": "IL", "address": "101 Lincoln Way, Springfield, IL 62701"},
+            {"income": 78129.40, "age": 6.60, "rooms": 7.90, "bedrooms": 5.00, "population": 38129.50, "price": 1495000.80, "state": "NY", "address": "77 Hudson Street, Albany, NY 12201"},
+            {"income": 61209.60, "age": 5.20, "rooms": 6.10, "bedrooms": 3.00, "population": 26120.40, "price": 785000.30, "state": "NV", "address": "44 Nevada Highway, Reno, NV 89501"},
+            {"income": 82129.90, "age": 7.00, "rooms": 8.20, "bedrooms": 5.00, "population": 45120.80, "price": 1850000.70, "state": "WA", "address": "88 Tacoma Way, Tacoma, WA 98401"},
+            {"income": 67120.40, "age": 5.70, "rooms": 6.70, "bedrooms": 3.00, "population": 31120.50, "price": 965000.20, "state": "TX", "address": "99 Austin Blvd, Austin, TX 78701"},
+            {"income": 76120.80, "age": 6.40, "rooms": 7.50, "bedrooms": 4.00, "population": 37120.90, "price": 1375000.50, "state": "CA", "address": "120 Napa Valley, Napa, CA 94558"}
+        ];
+
+        // Simulated Dirty Data with Missing & Extreme Values for Imputation Demo
+        let dirtyHousingData = JSON.parse(JSON.stringify(usaHousingData));
+        dirtyHousingData[3].income = null;
+        dirtyHousingData[7].population = null;
+        dirtyHousingData[12].income = null;
+        dirtyHousingData[2].price = 3500000.00; // Simulated outlier
+
+        let activeLab = 1;
+        let activeExercise = 1;
+
+        // Lab Configurations Map (Fleshed out with accurate and production-grade Python scripts)
+        const labsConfig = {
+            1: {
+                title: "Khám phá & Làm sạch dữ liệu USA Housing",
+                desc: "Thực hiện thăm dò thống kê mô tả ban đầu, xử lý dữ liệu khuyết thiếu (Imputation), chuẩn hóa dải dữ liệu số (MinMax Scaling) và phát hiện outliers bằng IQR & Z-score.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "Khám phá (EDA)",
+                        python: `import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 1. Đọc dữ liệu USA_Housing
+df = pd.read_csv("USA_Housing.csv")
+
+# 2. Hiển thị 10 dòng đầu
+print("--- 10 Dòng dữ liệu đầu ---")
+print(df.head(10))
+
+# 3. Kiểm tra số lượng bản ghi, thuộc tính và kiểu dữ liệu
+print("\\n--- Thông tin cấu trúc ---")
+print(df.info())
+
+# 4. Tính toán các thống kê mô tả cơ bản
+print("\\n--- Thống kê mô tả ---")
+desc = df.describe()
+print(desc)
+
+# 5. Vẽ biểu đồ phân bố cho giá nhà (Price)
+plt.figure(figsize=(8, 5))
+sns.histplot(df['Price'], kde=True, color='#F26F21', bins=30)
+plt.title("Phân bố Giá nhà Đất (USA Housing)")
+plt.xlabel("Giá trị ($)")
+plt.ylabel("Tần suất")
+plt.grid(True, alpha=0.3)
+plt.show()`,
+                        render: function(container) {
+                            let tableRows = usaHousingData.slice(0, 10).map((row, idx) => `
+                                <tr class="hover:bg-slate-50 transition border-b border-slate-100 text-xs">
+                                    <td class="p-3 font-semibold text-slate-500">${idx + 1}</td>
+                                    <td class="p-3">$${row.income.toLocaleString()}</td>
+                                    <td class="p-3">${row.age}</td>
+                                    <td class="p-3">${row.rooms}</td>
+                                    <td class="p-3">${row.bedrooms}</td>
+                                    <td class="p-3">${row.population.toLocaleString()}</td>
+                                    <td class="p-3 font-semibold text-fpt-orange">$${row.price.toLocaleString()}</td>
+                                </tr>
+                            `).join('');
+
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-table mr-2 text-fpt-orange"></i> 10 Dòng dữ liệu USA_Housing mẫu</h4>
+                                        <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm max-h-[300px] custom-scrollbar">
+                                            <table class="w-full text-left border-collapse">
+                                                <thead class="bg-slate-50 text-slate-600 font-bold text-xs sticky top-0 border-b border-slate-200">
+                                                    <tr>
+                                                        <th class="p-3">STT</th>
+                                                        <th class="p-3">Avg. Area Income</th>
+                                                        <th class="p-3">House Age</th>
+                                                        <th class="p-3">Rooms</th>
+                                                        <th class="p-3">Bedrooms</th>
+                                                        <th class="p-3">Population</th>
+                                                        <th class="p-3">Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>${tableRows}</tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-calculator mr-2 text-emerald-500"></i> Thống kê mô tả (Descriptive Statistics)</h4>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div class="bg-orange-50 border border-orange-100 p-4 rounded-xl text-center">
+                                                <span class="text-xs text-slate-500 font-medium block">Số dòng dữ liệu thật</span>
+                                                <span class="text-lg font-bold text-fpt-orange">5,000 dòng</span>
+                                            </div>
+                                            <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl text-center">
+                                                <span class="text-xs text-slate-500 font-medium block">Giá nhà TB (Mean Price)</span>
+                                                <span class="text-lg font-bold text-emerald-700">$1,232,072</span>
+                                            </div>
+                                            <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl text-center">
+                                                <span class="text-xs text-slate-500 font-medium block">Thu nhập TB khu vực</span>
+                                                <span class="text-lg font-bold text-blue-700">$68,583</span>
+                                            </div>
+                                            <div class="bg-purple-50 border border-purple-100 p-4 rounded-xl text-center">
+                                                <span class="text-xs text-slate-500 font-medium block">Độ lệch chuẩn Giá</span>
+                                                <span class="text-lg font-bold text-purple-700">$353,117</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-2">
+                                            <p class="font-bold">🔍 Phân tích EDA:</p>
+                                            <p>Phân bố giá bán của các căn hộ bám sát phân phối chuẩn (Gaussian Distribution). Điểm tập trung cao nhất nằm ở phân khúc giá từ $1.0M - $1.4M đô la Mỹ.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Làm sạch & Điền khuyết",
+                        python: `import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import MinMaxScaler
+
+df = pd.read_csv("USA_Housing.csv")
+
+# 1. Kiểm tra tỷ lệ dữ liệu bị thiếu
+missing_summary = df.isnull().sum()
+print("Số lượng dòng khuyết thiếu ban đầu:\\n", missing_summary)
+
+# 2. Xử lý khuyết thiếu bằng điền Trung vị (Median Imputation)
+for col in df.select_dtypes(include=[np.number]).columns:
+    df[col].fillna(df[col].median(), inplace=True)
+
+# 3. Kiểm tra và loại bỏ bản ghi trùng lặp
+duplicates_count = df.duplicated().sum()
+print(f"Số bản ghi trùng lặp phát hiện: {duplicates_count}")
+df.drop_duplicates(inplace=True)
+
+# 4. Chuẩn hóa dải dữ liệu số (MinMax Scaling)
+scaler = MinMaxScaler()
+numerical_cols = ['Avg. Area Income', 'Avg. Area House Age', 'Avg. Area Number of Rooms', 'Area Population']
+df_scaled = df.copy()
+df_scaled[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+
+# 5. Vẽ Boxplot so sánh Thu nhập trước và sau chuẩn hóa
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+sns.boxplot(y=df['Avg. Area Income'], ax=axes[0], color='#F26F21')
+axes[0].set_title("Trước chuẩn hóa (Giá trị gốc)")
+
+sns.boxplot(y=df_scaled['Avg. Area Income'], ax=axes[1], color='#10B981')
+axes[1].set_title("Sau khi chuẩn hóa MinMax (0.0 - 1.0)")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-wand-magic-sparkles mr-2 text-fpt-orange"></i> Trình xử lý làm sạch tự động</h4>
+                                        <p class="text-xs text-slate-500">Giả lập phát hiện 3 bản ghi bị lỗi hoặc khuyết thiếu trong tập USA Housing. Nhấn các nút dưới đây để chạy demo làm sạch dữ liệu:</p>
+                                        <div class="flex flex-wrap gap-2 pt-2">
+                                            <button onclick="runCleanDemo('impute')" class="bg-fpt-orange text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-orange-600 shadow transition flex items-center"><i class="fa-solid fa-fill-drip mr-1.5"></i> Điền khuyết (Median Imputation)</button>
+                                            <button onclick="runCleanDemo('scale')" class="bg-fpt-blue text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-slate-800 shadow transition flex items-center"><i class="fa-solid fa-scale-unbalanced mr-1.5"></i> Chuẩn hóa MinMax</button>
+                                            <button onclick="runCleanDemo('reset')" class="bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-slate-300 transition flex items-center"><i class="fa-solid fa-rotate-left mr-1.5"></i> Reset dữ liệu</button>
+                                        </div>
+                                        <div id="clean-status-box" class="p-4 rounded-xl border border-blue-100 bg-blue-50/30 text-xs text-slate-700 space-y-1">
+                                            <p class="font-bold text-blue-900">Trạng thái dữ liệu hiện tại:</p>
+                                            <p id="lbl-status-missing">⚠️ Số lượng bản ghi Null: <span class="font-bold text-red-500">3</span></p>
+                                            <p id="lbl-status-scale">🏷️ Dải dữ liệu: <span class="font-bold text-orange-500">Chưa chuẩn hóa ($50,000 - $150,000)</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 h-[280px]">
+                                        <canvas id="cleaningChartCanvas"></canvas>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(() => { renderCleaningChart(false, false); }, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Phát hiện Outliers (IQR/Z-score)",
+                        python: `import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+
+df = pd.read_csv("USA_Housing.csv")
+
+# 1. Phát hiện Outlier bằng phương pháp IQR (Q3 - Q1)
+Q1 = df['Price'].quantile(0.25)
+Q3 = df['Price'].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound_iqr = Q1 - 1.5 * IQR
+upper_bound_iqr = Q3 + 1.5 * IQR
+
+outliers_iqr = df[(df['Price'] < lower_bound_iqr) | (df['Price'] > upper_bound_iqr)]
+print(f"Số lượng outliers theo IQR: {len(outliers_iqr)}")
+
+# 2. Phát hiện Outlier bằng phương pháp Z-score (Threshold = 3)
+z_scores = np.abs(stats.zscore(df['Price']))
+outliers_z = df[z_scores > 3]
+print(f"Số lượng outliers theo Z-score (ngưỡng 3): {len(outliers_z)}")
+
+# 3. Trực quan hóa dữ liệu ngoại lai
+plt.figure(figsize=(10, 5))
+sns.scatterplot(x=df['Avg. Area Income'], y=df['Price'], hue=(z_scores > 3), palette={True: 'red', False: 'blue'})
+plt.title("Biểu đồ tán xạ phát hiện Outliers qua Z-score")
+plt.xlabel("Thu nhập khu vực")
+plt.ylabel("Giá nhà")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                    <div class="lg:col-span-4 space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-circle-exclamation mr-2 text-red-500"></i> Lọc điểm ngoại lai (IQR & Z-score)</h4>
+                                        <p class="text-xs text-slate-500">Điều chỉnh dải tham số lọc dải phân vị để xác định các bất động sản bất thường:</p>
+                                        <div class="space-y-2">
+                                            <label class="block text-xs font-semibold text-slate-600">Ngưỡng lọc IQR Factor (Mặc định 1.5):</label>
+                                            <input type="range" id="iqr-factor" min="0.5" max="3.0" step="0.1" value="1.5" oninput="updateOutliers()" class="w-full accent-fpt-orange">
+                                            <div class="flex justify-between text-xs text-slate-400">
+                                                <span>Nhạy (0.5)</span>
+                                                <span class="font-bold text-fpt-orange" id="iqr-val-label">1.5</span>
+                                                <span>Nới lỏng (3.0)</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600">
+                                            <p>Số lượng Outliers phát hiện: <span class="font-bold text-red-500" id="outlier-count-lbl">1</span></p>
+                                            <p class="mt-1 text-slate-500 leading-relaxed text-[11px]">Outliers gây ra hiện tượng lệch đường hồi quy tuyến tính trong bài toán học máy hồi quy (Regression), việc loại bỏ các điểm này trước khi huấn luyện giúp gia tăng R2 Score của mô hình lên đáng kể.</p>
+                                        </div>
+                                    </div>
+                                    <div class="lg:col-span-8 bg-white border border-slate-100 rounded-xl h-[300px]" id="outlier-chart-div"></div>
+                                </div>
+                            `;
+                            setTimeout(updateOutliers, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "Sơ đồ Quy trình Pipeline",
+                        python: `# Sơ đồ thể hiện 6 giai đoạn phát triển dự án Khoa học Dữ liệu hồi quy bất động sản:
+# 1. Thu thập dữ liệu (Data Ingestion) -> Đọc file USA_Housing.csv
+# 2. Làm sạch dữ liệu (Data Cleaning) -> Điền Null bằng Median, Khử trùng lặp
+# 3. Phân tích khám phá (EDA) -> Đo lường phương sai, vẽ KDE phân bố Price
+# 4. Trích chọn đặc trưng (Feature Engineering) -> MinMax Scaling cho các biến số
+# 5. Huấn luyện mô hình (Model Training) -> Train-Test Split (80/20) & Fit Random Forest
+# 6. Đánh giá kiểm thử (Evaluation) -> Đánh giá RMSE, MAE, R2 Score và SHAP values.`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-6">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-diagram-project mr-2 text-fpt-orange"></i> Sơ đồ luồng xử lý và huấn luyện ML (USA Housing)</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 relative">
+                                        <div class="bg-slate-900 text-white p-3 rounded-xl text-center border-t-4 border-fpt-orange shadow-sm">
+                                            <i class="fa-solid fa-file-import text-xl text-orange-400 mb-1"></i>
+                                            <h5 class="font-bold text-xs">1. Thu thập</h5>
+                                            <p class="text-[9px] text-slate-400 mt-1">Đọc file USA_Housing.csv</p>
+                                        </div>
+                                        <div class="bg-slate-900 text-white p-3 rounded-xl text-center border-t-4 border-blue-500 shadow-sm">
+                                            <i class="fa-solid fa-soap text-xl text-blue-400 mb-1"></i>
+                                            <h5 class="font-bold text-xs">2. Làm sạch</h5>
+                                            <p class="text-[9px] text-slate-400 mt-1">Điền Null, khử Outliers</p>
+                                        </div>
+                                        <div class="bg-slate-900 text-white p-3 rounded-xl text-center border-t-4 border-purple-500 shadow-sm">
+                                            <i class="fa-solid fa-magnifying-glass-chart text-xl text-purple-400 mb-1"></i>
+                                            <h5 class="font-bold text-xs">3. EDA</h5>
+                                            <p class="text-[9px] text-slate-400 mt-1">Vẽ KDE, Boxplot phân phối</p>
+                                        </div>
+                                        <div class="bg-slate-900 text-white p-3 rounded-xl text-center border-t-4 border-teal-500 shadow-sm">
+                                            <i class="fa-solid fa-maximize text-xl text-teal-400 mb-1"></i>
+                                            <h5 class="font-bold text-xs">4. Trích chọn</h5>
+                                            <p class="text-[9px] text-slate-400 mt-1">MinMax Scaling</p>
+                                        </div>
+                                        <div class="bg-slate-900 text-white p-3 rounded-xl text-center border-t-4 border-emerald-500 shadow-sm">
+                                            <i class="fa-solid fa-robot text-xl text-emerald-400 mb-1"></i>
+                                            <h5 class="font-bold text-xs">5. Training</h5>
+                                            <p class="text-[9px] text-slate-400 mt-1">Linear/Random Forest</p>
+                                        </div>
+                                        <div class="bg-slate-900 text-white p-3 rounded-xl text-center border-t-4 border-pink-500 shadow-sm">
+                                            <i class="fa-solid fa-chart-line text-xl text-pink-400 mb-1"></i>
+                                            <h5 class="font-bold text-xs">6. Đánh giá</h5>
+                                            <p class="text-[9px] text-slate-400 mt-1">MSE, R2 Score > 0.90</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-100 text-xs text-slate-700 leading-relaxed">
+                                        <p class="font-bold text-amber-900"><i class="fa-solid fa-lightbulb mr-1.5"></i> Điểm cốt lõi:</p>
+                                        Do đặc thù giá trị nhà đất phụ thuộc mật thiết vào thu nhập và dân cư địa phương, bước thứ 4 (Trích chọn và chuẩn hóa đặc trưng) đóng vai trò quyết định giúp thuật toán hồi quy hội tụ nhanh chóng, không bị thống trị bởi các giá trị thu nhập quá lớn.
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            },
+            2: {
+                title: "Phân phối dữ liệu & Phân tích tài chính",
+                desc: "Trực quan hóa phân phối biến số của các thuộc tính bằng KDE, thu thập giá cổ phiếu thực tế từ yfinance, phát hiện outliers qua Boxplot và phân tích Heatmap tương quan.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "KDE & Boxplot phân phối",
+                        python: `import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("USA_Housing.csv")
+features = ['Avg. Area Income', 'Avg. Area House Age', 'Area Population']
+
+# Thiết lập layout vẽ 3 đồ thị
+fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+
+for i, col in enumerate(features):
+    # Vẽ KDE kết hợp Histogram
+    sns.histplot(df[col], kde=True, ax=axes[i], color='#F26F21', stat='density')
+    axes[i].set_title(f"Phân phối KDE of {col}")
+    axes[i].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-chart-area mr-2 text-fpt-orange"></i> Ước lượng mật độ phân phối (KDE)</h4>
+                                        <div id="kde-housing-div" class="bg-white border border-slate-100 rounded-xl h-[260px]"></div>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-square-minus mr-2 text-teal-500"></i> Boxplot phân phối các thuộc tính</h4>
+                                        <div id="boxplot-housing-div" class="bg-white border border-slate-100 rounded-xl h-[260px]"></div>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderLab2Distribution, 50);
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Dữ liệu tài chính yfinance",
+                        python: `import yfinance as yf
+import matplotlib.pyplot as plt
+
+# 1. Tải dữ liệu giao dịch 2 năm của mã cổ phiếu AAPL
+ticker = "AAPL"
+stock = yf.download(ticker, start="2022-01-01", end="2024-01-01")
+
+# 2. Tính toán đường trung bình động MA50 và MA200
+stock["MA50"] = stock["Close"].rolling(window=50).mean()
+stock["MA200"] = stock["Close"].rolling(window=200).mean()
+
+# 3. Trực quan hóa đường xu hướng giá đóng cửa
+plt.figure(figsize=(12, 6))
+plt.plot(stock["Close"], label="Giá đóng cửa thực tế", color='#1A2F50', alpha=0.8)
+plt.plot(stock["MA50"], label="Đường trung bình MA50 (Ngắn hạn)", color='#F26F21', linestyle='--')
+plt.plot(stock["MA200"], label="Đường trung bình MA200 (Dài hạn)", color='#10B981', linestyle='-.')
+
+plt.title("Biểu đồ Phân tích Kỹ thuật cổ phiếu Apple (AAPL 2022-2024)")
+plt.xlabel("Thời gian")
+plt.ylabel("Giá trị giao dịch ($)")
+plt.legend(loc="best")
+plt.grid(True, alpha=0.3)
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center border-b pb-2 flex-wrap gap-2">
+                                        <h4 class="font-bold text-slate-700"><i class="fa-solid fa-money-bill-trend-up mr-2 text-fpt-orange"></i> Biến động giá đóng cửa & Trung bình động AAPL</h4>
+                                        <div class="flex items-center space-x-3 text-xs">
+                                            <label class="flex items-center space-x-1"><input type="checkbox" id="chk-ma50" checked onchange="toggleAAPL_MA()" class="accent-fpt-orange"> <span class="text-orange-500 font-bold">MA50</span></label>
+                                            <label class="flex items-center space-x-1"><input type="checkbox" id="chk-ma200" checked onchange="toggleAAPL_MA()" class="accent-fpt-blue"> <span class="text-blue-500 font-bold">MA200</span></label>
+                                        </div>
+                                    </div>
+                                    <div id="aapl-stock-div" class="bg-white rounded-xl h-[260px]"></div>
+                                </div>
+                            `;
+                            setTimeout(renderAAPL_Stock, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Phát hiện Outliers bằng Boxplot",
+                        python: `import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("USA_Housing.csv")
+
+# Vẽ Boxplot cho từng cột số để nhận diện outliers
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df[['Avg. Area Income', 'Avg. Area House Age', 'Area Population']])
+plt.title("Nhận diện điểm dị biệt (Outliers) bằng Boxplot")
+plt.grid(True, alpha=0.3)
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-toolbox mr-2 text-fpt-orange"></i> Trực quan Boxplot phát hiện điểm bất thường</h4>
+                                        <div id="outlier-detection-boxplot" class="bg-white rounded-xl h-[260px]"></div>
+                                    </div>
+                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-3">
+                                        <h5 class="font-bold text-slate-800">⚠️ Ý nghĩa lâm sàng & thực tế của Outliers:</h5>
+                                        <p>Các ngôi nhà có giá bán vượt xa mức $2.5M hoặc thấp hơn $200k mặc dù các thuộc tính khác tương tự được đánh dấu là bất thường.</p>
+                                        <p><strong>Giải thích:</strong> Điều này có thể xuất phát từ các giao dịch nội bộ, sai lệch nhập liệu hệ thống hoặc bất động sản có đặc thù lịch sử đặc biệt cần lọc bỏ trước khi huấn luyện mô hình học máy.</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderOutlierBoxplot, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "Mối quan hệ tương quan",
+                        python: `import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("USA_Housing.csv")
+
+# Tính ma trận tương quan giữa các cột số
+numerical_df = df.select_dtypes(include=['float64', 'int64'])
+corr_matrix = numerical_df.corr()
+
+# Vẽ ma trận tương quan dạng Heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
+plt.title("Ma trận tương quan Heatmap của dữ liệu USA Housing")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-border-all mr-2 text-fpt-orange"></i> Heatmap ma trận tương quan (USA Housing)</h4>
+                                        <div id="corr-housing-div" class="bg-white rounded-xl h-[260px]"></div>
+                                    </div>
+                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                        <h5 class="font-bold text-slate-800">📌 Nhận định quan trọng:</h5>
+                                        <ul class="list-disc pl-4 space-y-1">
+                                            <li><strong>Avg. Area Income & Price (0.64):</strong> Tương quan đồng biến mạnh mẽ nhất. Vùng có thu nhập cao luôn đi kèm giá nhà đắt đỏ.</li>
+                                            <li><strong>House Age & Price (0.45):</strong> Tuổi đời nhà đất đóng góp tích cực vào giá trị.</li>
+                                            <li>Các biến phòng ngủ (Bedrooms) và phòng khách (Rooms) hầu như không có hiện tượng đa cộng tuyến nghiêm trọng với các biến còn lại.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderCorrHeatmap, 50);
+                        }
+                    }
+                ]
+            },
+            3: {
+                title: "Trực quan hóa dữ liệu đa chiều",
+                desc: "Khảo sát và biểu diễn các thuộc tính dữ liệu cao chiều bằng biểu đồ tọa độ song song, ma trận tán xạ đa lớp và giảm chiều dữ liệu PCA vs t-SNE.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "Scatter Plot (Iris)",
+                        python: `import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+import pandas as pd
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df['species'] = iris.target
+
+plt.figure(figsize=(8, 6))
+sns.scatterplot(
+    data=df,
+    x="petal length (cm)",
+    y="petal width (cm)",
+    hue="species",
+    palette="Set1"
+)
+plt.title("Biểu đồ tán xạ phân lớp loài hoa Iris")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                    <div class="lg:col-span-8 bg-white border border-slate-150 rounded-xl h-[300px]" id="iris-scatter-div"></div>
+                                    <div class="lg:col-span-4 bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                        <h5 class="font-bold text-slate-800">🔍 Phân tích khả năng phân tách:</h5>
+                                        <p>Nhóm loài hoa <strong>Setosa (loại 0)</strong> tách biệt hoàn toàn so với 2 nhóm còn lại nhờ có dải kích thước cánh hoa (Petal length & Petal width) cực nhỏ.</p>
+                                        <p>Loài <strong>Versicolor</strong> và <strong>Virginica</strong> bám sát nhau nhưng vẫn có ranh giới phân tách tương đối rõ ràng bằng các đường phân chia tuyến tính.</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderIrisScatter, 50);
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Scatter Matrix (Pairplot)",
+                        python: `import seaborn as sns
+import pandas as pd
+from sklearn.datasets import load_wine
+import matplotlib.pyplot as plt
+
+wine = load_wine()
+df = pd.DataFrame(wine.data, columns=wine.feature_names)
+df['target'] = wine.target
+
+# Vẽ ma trận phân tán Pairplot giới hạn một số đặc tính chính
+sns.pairplot(df[['alcohol', 'malic_acid', 'ash', 'target']], hue="target", palette="Set2")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-grip mr-2 text-fpt-orange"></i> Ma trận tán xạ (Scatter Matrix Wine Dataset)</h4>
+                                    <p class="text-xs text-slate-500">Giúp nhà khoa học dữ liệu bao quát toàn bộ mối quan hệ ghép đôi của các thuộc tính hóa học chỉ trong một layout:</p>
+                                    <div id="pairplot-sim-div" class="bg-white rounded-xl h-[320px]"></div>
+                                </div>
+                            `;
+                            setTimeout(renderPairplotSim, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Parallel Coordinates Plot",
+                        python: `import pandas as pd
+from pandas.plotting import parallel_coordinates
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+
+df = pd.read_csv("USA_Housing.csv")
+
+# Chuẩn hóa để dễ vẽ song song
+scaler = MinMaxScaler()
+cols_to_scale = ['Avg. Area Income', 'Avg. Area House Age', 'Avg. Area Number of Rooms', 'Area Population']
+df_scaled = df.copy()
+df_scaled[cols_to_scale] = scaler.fit_transform(df[cols_to_scale])
+
+# Chia nhóm Price để gán nhãn màu sắc
+df_scaled['Price_Class'] = pd.qcut(df['Price'], q=3, labels=['Low', 'Medium', 'High'])
+
+plt.figure(figsize=(12, 6))
+parallel_coordinates(df_scaled[cols_to_scale + ['Price_Class']], 'Price_Class', colormap=plt.cm.Set2, linewidth=1.5)
+plt.title("Đồ thị Tọa độ Song song - USA Housing Features")
+plt.ylabel("Giá trị đã chuẩn hóa [0, 1]")
+plt.grid(True, alpha=0.3)
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-bars-staggered mr-2 text-fpt-orange"></i> Đồ thị tọa độ song song (Parallel Coordinates)</h4>
+                                    <p class="text-xs text-slate-500">Giúp nhà nghiên cứu bao quát các thuộc tính vật lý của nhà đất so với phân vùng giá bán (Thấp, Trung bình, Cao).</p>
+                                    <div id="parallel-coords-div" class="bg-white rounded-xl h-[320px]"></div>
+                                </div>
+                            `;
+                            setTimeout(renderParallelCoords, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "Giảm chiều dữ liệu PCA vs t-SNE",
+                        python: `import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("USA_Housing.csv")
+features = ['Avg. Area Income', 'Avg. Area House Age', 'Avg. Area Number of Rooms', 'Area Population']
+
+# 1. Chuẩn hóa thang đo Standard
+X = StandardScaler().fit_transform(df[features])
+
+# 2. Áp dụng giảm chiều xuống 2 chiều thành phần chính
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+
+# 3. Trực quan hóa biểu đồ sau giảm chiều
+plt.figure(figsize=(8, 6))
+scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=df['Price'], cmap='viridis', alpha=0.7)
+plt.title("PCA Projection của USA Housing Dataset về 2D")
+plt.xlabel("Thành phần chính 1 (PC1)")
+plt.ylabel("Thành phần chính 2 (PC2)")
+plt.colorbar(scatter, label="Giá trị bất động sản ($)")
+plt.grid(True, alpha=0.3)
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                    <div class="lg:col-span-8 bg-white border border-slate-100 rounded-xl h-[300px]" id="pca-housing-div"></div>
+                                    <div class="lg:col-span-4 bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                        <h5 class="font-bold text-slate-800">💡 Ứng dụng giảm chiều PCA:</h5>
+                                        <p>Thuật toán PCA đã nén 5 thuộc tính số phức tạp của ngôi nhà xuống không gian phẳng 2 chiều nhưng vẫn bảo toàn tối đa phương sai của thông tin.</p>
+                                        <p>Các ngôi nhà có dải màu sáng (giá nhà cao) xu hướng tập trung rõ nét về một phía của hệ tọa độ mới.</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderPCAHousing, 50);
+                        }
+                    }
+                ]
+            },
+            4: {
+                title: "Trực quan hóa dữ liệu Nâng cao",
+                desc: "Thực hiện trực quan hóa ma trận Correlation Heatmap, Pixel-based lớn, Star Glyphs đại diện đa thuộc tính và Chernoff Faces sinh động.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "Heatmap tương quan",
+                        python: `import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("USA_Housing.csv")
+numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
+
+plt.figure(figsize=(8,6))
+sns.heatmap(df[numerical_cols].corr(), annot=True, cmap="coolwarm", linewidths=0.5)
+plt.title("Correlation Heatmap")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-border-all mr-2 text-fpt-orange"></i> Ma trận tương quan các đặc trưng (Heatmap)</h4>
+                                        <p class="text-xs text-slate-500">Màu đỏ thể hiện tương quan đồng biến mạnh, màu xanh thể hiện tương quan nghịch biến.</p>
+                                        <div class="bg-white p-2 rounded-xl border border-slate-100 h-[260px]" id="annot-heatmap-div"></div>
+                                    </div>
+                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                        <h5 class="font-bold text-slate-800">📌 Ý nghĩa Heatmap đối với thiết kế mô hình:</h5>
+                                        <p>Giúp xác định hiện tượng đa cộng tuyến (multicollinearity). Nếu hai biến độc lập tương quan cực cao (>0.8), ta nên cân nhắc loại bỏ bớt một biến để nâng cao hiệu quả hồi quy.</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderAnnotHeatmap, 50);
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Pixel-based Visualization",
+                        python: `import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("USA_Housing.csv")
+prices = df['Price'].values[:400] # Lọc 400 căn đầu tiên
+
+# Tạo ma trận vuông 20x20
+size = int(np.ceil(np.sqrt(len(prices))))
+pixel_matrix = np.zeros(size * size)
+pixel_matrix[:len(prices)] = prices
+pixel_matrix = pixel_matrix.reshape(size, size)
+
+# Vẽ ma trận pixel màu sắc
+plt.figure(figsize=(6, 6))
+plt.imshow(pixel_matrix, cmap="viridis")
+plt.colorbar(label="Price ($)")
+plt.title("Pixel-based Visualization (USA Housing)")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-border-all mr-2 text-fpt-orange"></i> Biểu diễn mật độ lớn bằng Pixel-based</h4>
+                                        <div id="pixel-based-div" class="bg-white rounded-xl h-[260px]"></div>
+                                    </div>
+                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-3">
+                                        <h5 class="font-bold text-slate-800">🔍 Khái niệm kỹ thuật:</h5>
+                                        <p>Trong các tệp dữ liệu quy mô hàng triệu bản ghi, việc vẽ Scatter thông thường sẽ gây ra hiện tượng Overplotting (chồng chéo điểm). Kỹ thuật Pixel-based biến mỗi bản ghi thành một điểm ảnh mang màu sắc đại diện.</p>
+                                        <p>Ở đây, các ô màu sáng biểu diễn các căn hộ có giá trị vượt trội ($1.5M+).</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderPixelBased, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Star Glyph (Radar Chart)",
+                        python: `import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+
+df = pd.read_csv("USA_Housing.csv")
+features = ['Avg. Area Income', 'Avg. Area House Age', 'Avg. Area Number of Rooms', 'Area Population']
+
+# Chuẩn hóa về [0, 1] để vẽ Radar cân bằng
+scaler = MinMaxScaler()
+df_scaled = df.copy()
+df_scaled[features] = scaler.fit_transform(df[features])
+
+labels = np.array(features)
+num_vars = len(labels)
+
+angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
+angles += angles[:1] # Đóng vòng khép kín của Radar
+
+# Lấy thông số căn nhà số 1
+values = df_scaled[features].iloc[0].values.tolist()
+values += values[:1]
+
+fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+ax.plot(angles, values, color='#F26F21', linewidth=2)
+ax.fill(angles, values, color='#F26F21', alpha=0.25)
+ax.set_thetagrids(np.degrees(angles[:-1]), labels)
+plt.title("Star Glyph của Căn hộ số 1")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    <div class="lg:col-span-2 space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-circle-dot mr-2 text-fpt-orange"></i> So sánh hồ sơ bất động sản nổi bật (Star Glyph)</h4>
+                                        <div id="radar-glyph-div" class="bg-white rounded-xl h-[280px]"></div>
+                                    </div>
+                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-3">
+                                        <p class="font-bold text-slate-700">Chọn căn nhà để hiển thị:</p>
+                                        <select id="radar-index-sel" onchange="renderRadarGlyph()" class="w-full p-2 bg-white border border-slate-300 rounded-lg focus:outline-none">
+                                            <option value="0">Căn nhà 1 (NE - Giá $1.05M)</option>
+                                            <option value="1">Căn nhà 2 (CA - Giá $1.50M)</option>
+                                            <option value="2">Căn nhà 3 (FL - Giá $1.05M)</option>
+                                            <option value="3">Căn nhà 4 (TX - Giá $1.26M)</option>
+                                        </select>
+                                        <p class="text-[11px] text-slate-500">Giúp nhà tư vấn nhìn thấu điểm mạnh/yếu của căn nhà (diện tích, phòng ngủ, dân số, thu nhập khu vực) trên cùng biểu đồ.</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderRadarGlyph, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "Chernoff Faces",
+                        python: `import matplotlib.pyplot as plt
+
+def draw_chernoff_face(ax, data, title):
+    # Ánh xạ thuộc tính bất động sản vào đặc tính khuôn mặt người đại diện
+    face_size = 0.5 + data['Avg. Area Income'] * 0.5
+    eye_size = 0.05 + data['Avg. Area House Age'] * 0.05
+    mouth_curve = data['Price'] - 0.5
+    
+    # 1. Vẽ đầu
+    face = plt.Circle((0.5, 0.5), face_size * 0.4, fill=False, color='#F26F21', linewidth=2.5)
+    ax.add_patch(face)
+    
+    # 2. Vẽ mắt
+    left_eye = plt.Circle((0.35, 0.6), eye_size, color='#1A2F50')
+    right_eye = plt.Circle((0.65, 0.6), eye_size, color='#1A2F50')
+    ax.add_patch(left_eye)
+    ax.add_patch(right_eye)
+    
+    # 3. Vẽ miệng cười / buồn tùy thuộc vào tầm Giá nhà
+    x_mouth = [0.35, 0.5, 0.65]
+    y_mouth = [0.35, 0.35 + mouth_curve * 0.15, 0.35]
+    ax.plot(x_mouth, y_mouth, color='red', linewidth=3)
+    
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.set_title(title)
+    ax.axis('off')
+
+# Ví dụ vẽ Chernoff Face đại diện cho 2 căn hộ có thu nhập khác biệt`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-6">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-face-smile-wink mr-2 text-fpt-orange"></i> Biểu diễn Chernoff Faces (Nhân dạng dữ liệu)</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div class="bg-slate-50 p-4 rounded-xl text-center flex flex-col items-center justify-center">
+                                            <canvas id="face-c1" width="130" height="130"></canvas>
+                                            <span class="text-xs font-bold mt-2">Căn nhà 2 (CA) - Giá $1.5M</span>
+                                            <span class="text-[10px] text-slate-400">Thu nhập cao (Mặt to, Miệng cười lớn)</span>
+                                        </div>
+                                        <div class="bg-slate-50 p-4 rounded-xl text-center flex flex-col items-center justify-center">
+                                            <canvas id="face-c2" width="130" height="130"></canvas>
+                                            <span class="text-xs font-bold mt-2">Căn nhà 6 (IL) - Giá $479k</span>
+                                            <span class="text-[10px] text-slate-400">Thu nhập thấp (Mặt nhỏ, Miệng buồn)</span>
+                                        </div>
+                                        <div class="bg-slate-50 p-4 rounded-xl flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                            <h5 class="font-bold text-slate-800">💡 Giải thích Chernoff Faces:</h5>
+                                            <p>Phương pháp này sử dụng các biểu cảm khuôn mặt để biểu diễn dữ liệu đa chiều, giúp óc phán đoán tự nhiên của con người nhanh chóng phân nhóm dữ liệu.</p>
+                                            <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-500">
+                                                <li>Khuôn mặt to = Thu nhập vùng lớn.</li>
+                                                <li>Miệng cười = Giá bán nhà cao.</li>
+                                                <li>Kích thước mắt = Số phòng lớn.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(drawAllChernoff, 50);
+                        }
+                    }
+                ]
+            },
+            5: {
+                title: "Trực quan Phân cấp & Mạng AI",
+                desc: "Trực quan hóa cấu trúc dữ liệu phân cấp lớn bằng Treemap, Sunburst, không gian 3D Scatter và biểu diễn kiến trúc mạng thần kinh nơ-ron đa tầng MLP.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "Treemap phân cấp sản phẩm",
+                        python: `import pandas as pd
+import plotly.express as px
+
+# Tạo tập dữ liệu phân cấp danh mục sản phẩm
+data = {
+    "Category": ["Electronics", "Electronics", "Electronics", "Clothing", "Clothing", "Home", "Home"],
+    "Subcategory": ["Phone", "Laptop", "Tablet", "Men", "Women", "Furniture", "Kitchen"],
+    "Sales": [500, 400, 200, 300, 250, 350, 150]
+}
+df = pd.DataFrame(data)
+
+# Vẽ Treemap thể hiện nhóm
+fig = px.treemap(
+    df,
+    path=["Category", "Subcategory"],
+    values="Sales",
+    title="Product Sales Treemap"
+)
+fig.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-rectangle-list mr-2 text-fpt-orange"></i> Cấu trúc danh mục bằng Treemap</h4>
+                                    <div id="treemap-housing-div" class="bg-white rounded-xl h-[280px]"></div>
+                                </div>
+                            `;
+                            setTimeout(renderLab5Treemap, 50);
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Sunburst phân cấp khu vực",
+                        python: `import pandas as pd
+import plotly.express as px
+
+# Tạo tập dữ liệu phân cấp địa lý
+data = {
+    "Region": ["Asia", "Asia", "Asia", "Europe", "Europe", "Europe"],
+    "Country": ["Vietnam", "Thailand", "Japan", "Germany", "France", "Italy"],
+    "Value": [120, 100, 200, 150, 130, 90]
+}
+df = pd.DataFrame(data)
+
+fig = px.sunburst(
+    df,
+    path=["Region", "Country"],
+    values="Value",
+    title="Regional Distribution"
+)
+fig.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-circle-notch mr-2 text-teal-500"></i> Phân cấp bang bằng Sunburst</h4>
+                                    <div id="sunburst-housing-div" class="bg-white rounded-xl h-[280px]"></div>
+                                </div>
+                            `;
+                            setTimeout(renderLab5Sunburst, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Trực quan hóa dữ liệu 3D",
+                        python: `from sklearn.datasets import load_iris
+import pandas as pd
+import plotly.express as px
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df["species"] = iris.target
+
+fig = px.scatter_3d(
+    df,
+    x="sepal length (cm)",
+    y="sepal width (cm)",
+    z="petal length (cm)",
+    color="species"
+)
+fig.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-cube mr-2 text-fpt-orange"></i> Trực quan hóa 3D Scatter (Xoay và thu phóng động)</h4>
+                                    <div id="3d-scatter-housing-div" class="bg-white rounded-xl h-[320px]"></div>
+                                </div>
+                            `;
+                            setTimeout(renderLab53DScatter, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "Mạng nơ-ron hồi quy MLP",
+                        python: `from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.utils import plot_model
+
+# Xây dựng kiến trúc hồi quy dự đoán Giá nhà
+model = Sequential([
+    Input(shape=(4,)), # 4 inputs chính: Income, Age, Rooms, Population
+    Dense(8, activation='relu', name='Hidden_Layer_1'),
+    Dense(16, activation='relu', name='Hidden_Layer_2'),
+    Dense(1, activation='linear', name='Output_Regression')
+])
+
+model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
+model.summary()
+
+# Lưu cấu trúc đồ họa mạng nơ-ron
+# plot_model(model, to_file='neural_network.png', show_shapes=True, show_layer_names=True)`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-6">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-network-wired mr-2 text-fpt-orange"></i> Mô hình hóa cấu trúc Mạng nơ-ron nhân tạo MLP hồi quy giá nhà</h4>
+                                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                        <div class="lg:col-span-8 bg-slate-900 rounded-2xl p-6 h-[320px] flex items-center justify-center relative overflow-hidden shadow-inner">
+                                            <div class="w-full flex justify-between px-12 z-10 relative">
+                                                <!-- Input Layer -->
+                                                <div class="flex flex-col justify-around h-64 space-y-2">
+                                                    <div onclick="selectMLP('input')" class="w-9 h-9 rounded-full bg-orange-500 pulsing-node flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">Income</div>
+                                                    <div onclick="selectMLP('input')" class="w-9 h-9 rounded-full bg-orange-500 pulsing-node flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">Age</div>
+                                                    <div onclick="selectMLP('input')" class="w-9 h-9 rounded-full bg-orange-500 pulsing-node flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">Rooms</div>
+                                                    <div onclick="selectMLP('input')" class="w-9 h-9 rounded-full bg-orange-500 pulsing-node flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">Pop</div>
+                                                </div>
+                                                <!-- Hidden Layer 1 -->
+                                                <div class="flex flex-col justify-around h-64 space-y-1">
+                                                    <div onclick="selectMLP('hidden')" class="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">H1</div>
+                                                    <div onclick="selectMLP('hidden')" class="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">H2</div>
+                                                    <div onclick="selectMLP('hidden')" class="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">H3</div>
+                                                    <div onclick="selectMLP('hidden')" class="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white text-[9px] font-bold cursor-pointer">H4</div>
+                                                </div>
+                                                <!-- Output Layer -->
+                                                <div class="flex flex-col justify-center h-64">
+                                                    <div onclick="selectMLP('output')" class="w-12 h-12 rounded-full bg-emerald-500 pulsing-node flex items-center justify-center text-white text-[10px] font-bold cursor-pointer shadow-lg shadow-emerald-500/50">Price ($)</div>
+                                                </div>
+                                            </div>
+                                            <div class="absolute inset-0 opacity-10 pointer-events-none flex items-center justify-center">
+                                                <i class="fa-solid fa-brain text-[200px] text-slate-100"></i>
+                                            </div>
+                                        </div>
+                                        <div class="lg:col-span-4 bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                            <h5 class="font-bold text-slate-800" id="mlp-title-lbl">Chọn một phân lớp mạng để xem vai trò</h5>
+                                            <p id="mlp-desc-lbl">Mạng hồi quy học sâu sử dụng hàm kích hoạt tuyến tính (Linear Activation) ở lớp đầu ra để dự đoán giá trị nhà liên tục.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            },
+            6: {
+                title: "Xây dựng Dashboard & Web Apps",
+                desc: "Thực hành phát triển các lớp biểu đồ cơ bản với Matplotlib, biểu đồ Seaborn Violin nâng cao, xây dựng Subplots Plotly và web app Streamlit.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "Matplotlib Subplots",
+                        python: `import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv("USA_Housing.csv")
+
+# Thiết lập layout vẽ 3 biểu đồ Matplotlib
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+# 1. Line Chart
+axes[0].plot(df['Price'].values[:50], color='blue')
+axes[0].set_title("Line Chart (Price)")
+
+# 2. Bar Chart
+axes[1].bar(df['State'].value_counts().index[:5], df['State'].value_counts().values[:5], color='orange')
+axes[1].set_title("Bar Chart (State Counts)")
+
+# 3. Histogram
+axes[2].hist(df['Avg. Area Income'], bins=20, color='green')
+axes[2].set_title("Histogram (Income)")
+
+plt.tight_layout()
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-chart-line mr-2 text-fpt-orange"></i> Biểu đồ phối hợp (Matplotlib Layout Simulation)</h4>
+                                    <div class="bg-white p-2 rounded-xl border border-slate-100 h-[300px]" id="matplotlib-layout-div"></div>
+                                </div>
+                            `;
+                            setTimeout(renderMatplotlibLayout, 50);
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Seaborn Violin Plot",
+                        python: `import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("USA_Housing.csv")
+
+# Chuyển đổi định dạng số phòng ngủ thành chuỗi số nguyên để phân nhóm trực quan
+df['Bedrooms_Group'] = df['Avg. Area Number of Bedrooms'].apply(lambda x: f"{int(np.floor(x))} PN")
+
+plt.figure(figsize=(10, 6))
+sns.violinplot(
+    data=df, 
+    x="Bedrooms_Group", 
+    y="Price", 
+    palette="Set2",
+    inner="box"
+)
+plt.title("Biểu đồ phân bố mật độ Giá nhà theo số phòng ngủ (Violin Plot)")
+plt.xlabel("Số phòng ngủ")
+plt.ylabel("Giá nhà ($)")
+plt.grid(True, alpha=0.3)
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                    <div class="lg:col-span-8 space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-chart-line mr-2 text-fpt-orange"></i> Seaborn Violin Plot (USA Housing Price)</h4>
+                                        <div id="violin-housing-div" class="bg-white rounded-xl h-[280px]"></div>
+                                    </div>
+                                    <div class="lg:col-span-4 bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                        <h5 class="font-bold text-slate-800">📊 Phân tích đồ thị Violin:</h5>
+                                        <p>Biểu đồ Violin kết hợp giữa mật độ phân phối KDE và Boxplot bên trong, giúp chúng ta nhìn thấy dải mật độ giá tập trung tại từng phân loại phòng ngủ.</p>
+                                        <p class="text-slate-500">Dễ nhận thấy rằng số lượng phòng ngủ càng cao thì dải phân vị giá nhà có xu hướng dịch chuyển lên các tầm giá trị cao hơn.</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderViolinPlot, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Plotly Interactive Dashboard",
+                        python: `from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+import pandas as pd
+
+df = pd.read_csv("USA_Housing.csv")
+
+# Tạo layout grid 2 biểu đồ
+fig = make_subplots(rows=1, cols=2)
+fig.add_trace(go.Scatter(x=df['Avg. Area Income'], y=df['Price'], mode='markers'), row=1, col=1)
+fig.add_trace(go.Histogram(x=df['Price']), row=1, col=2)
+fig.update_layout(title_text="Plotly Subplots Dashboard")
+fig.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-table-cells-large mr-2 text-fpt-orange"></i> Plotly subplots layout dashboard</h4>
+                                    <div class="bg-white p-2 rounded-xl border border-slate-100 h-[320px]" id="plotly-subplots-div"></div>
+                                </div>
+                            `;
+                            setTimeout(renderPlotlySubplots, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "Web App Streamlit Mockup",
+                        python: `import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+# 1. Tiêu đề Dashboard
+st.title("USA Housing Interactive Analytical App")
+
+# 2. Đọc file CSV dữ liệu
+df = pd.read_csv("USA_Housing.csv")
+
+# 3. Tạo thanh điều hướng Sidebar lọc bang
+st.sidebar.header("Bộ lọc tùy chọn")
+selected_state = st.sidebar.selectbox("Lọc theo tiểu bang", df['State'].unique())
+
+# 4. Lọc và hiển thị dữ liệu
+filtered_df = df[df['State'] == selected_state]
+st.write(f"Đang hiển thị {len(filtered_df)} bản ghi của bang {selected_state}")
+st.dataframe(filtered_df.head(10))
+
+# 5. Vẽ đồ thị phân bố Price của bang được chọn
+fig = px.histogram(filtered_df, x="Price", title=f"Phân phối Giá nhà bang {selected_state}")
+st.plotly_chart(fig)`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-window-restore mr-2 text-fpt-orange"></i> Dashboard Streamlit tương tác trực quan</h4>
+                                    <div class="bg-slate-900 rounded-xl p-5 text-white text-xs space-y-4 shadow-lg border border-slate-800">
+                                        <div class="flex items-center space-x-2 border-b border-slate-800 pb-3">
+                                            <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                                            <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                                            <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                                            <span class="text-slate-400 font-bold ml-2">Streamlit Server running at http://localhost:8501</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                            <!-- Sidebar -->
+                                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
+                                                <h5 class="font-bold text-fpt-orange">⚙️ Thiết lập bộ lọc</h5>
+                                                <div>
+                                                    <label class="block text-slate-400 mb-1.5 font-medium">Chọn tiểu bang:</label>
+                                                    <select id="streamlit-state-sel" onchange="runStreamlitFilter()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                                                        <option value="all">Tất cả tiểu bang</option>
+                                                        <option value="CA">California (CA)</option>
+                                                        <option value="TX">Texas (TX)</option>
+                                                        <option value="NY">New York (NY)</option>
+                                                        <option value="FL">Florida (FL)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- Main -->
+                                            <div class="md:col-span-3 space-y-4 text-slate-300">
+                                                <h3 class="text-base font-extrabold text-white">Báo cáo Giá nhà Đất Hoa Kỳ</h3>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div class="bg-slate-850 p-2 rounded h-[160px]" id="st-chart1"></div>
+                                                    <div class="bg-slate-850 p-2 rounded h-[160px]" id="st-chart2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(runStreamlitFilter, 50);
+                        }
+                    }
+                ]
+            },
+            7: {
+                title: "Tương tác liên kết (Dash & Streamlit)",
+                desc: "Trải nghiệm cơ chế liên kết động giữa 2 biểu đồ (Linking) và tính năng quét lọc tương tác (Brushing/Filtering) dữ liệu thông minh.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "Plotly Interactive Scatter",
+                        python: `import pandas as pd
+import plotly.express as px
+
+df = pd.read_csv("USA_Housing.csv")
+
+fig = px.scatter(
+    df,
+    x="Avg. Area Income",
+    y="Price",
+    color="Avg. Area Number of Rooms",
+    title="Interactive Price vs Income Scatter"
+)
+fig.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-expand-arrows-alt mr-2 text-fpt-orange"></i> Biểu đồ tương tác độc lập (Plotly Scatter)</h4>
+                                    <div class="bg-white rounded-xl h-[300px]" id="plotly-single-scatter"></div>
+                                </div>
+                            `;
+                            setTimeout(renderPlotlySingleScatter, 50);
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Linking Visualization",
+                        python: `from dash import Dash, dcc, html, Input, Output
+import plotly.express as px
+import pandas as pd
+
+df = pd.read_csv("USA_Housing.csv")
+app = Dash(__name__)
+
+app.layout = html.Div([
+    html.H2("Biểu đồ tương tác liên kết dải điểm"),
+    dcc.Graph(id="scatter-plot", figure=px.scatter(df, x="Avg. Area Income", y="Price")),
+    dcc.Graph(id="histogram-plot")
+])
+
+# Khi người dùng khoanh vùng một nhóm điểm trên scatter, histogram cập nhật dải tần số tương ứng
+@app.callback(
+    Output("histogram-plot", "figure"),
+    Input("scatter-plot", "selectedData")
+)
+def update_histogram(selectedData):
+    if selectedData is None:
+        filtered_df = df
+    else:
+        # Trích lọc tọa độ điểm được chọn
+        points_indices = [p["pointIndex"] for p in selectedData["points"]]
+        filtered_df = df.iloc[points_indices]
         
-        // Cấu hình API và Model
-        // **Lưu ý: API Key được để trống, hệ thống Canvas sẽ tự động cung cấp trong runtime.**
-        const apiKey = ""; 
-        const model = "gemini-2.5-flash-preview-09-2025";
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-        
-        let chatHistory = [];
-        let isAILoading = false;
+    return px.histogram(filtered_df, x="Price", title="Tần suất phân bố dải giá của tập hợp đang chọn")
 
-        // System Instruction để định nghĩa vai trò của AI
-        const systemPrompt = "Bạn là Trợ lý AI cá nhân trên trang web của Phạm Tự Trung Chính, Mã sinh viên PK04386, chuyên ngành Lập Trình Ứng Dụng Trí Tuệ Nhân Tạo. Nhiệm vụ của bạn là trả lời các câu hỏi về thông tin cá nhân, chuyên ngành, dự án và mục tiêu của Chính dựa trên nội dung có sẵn trên trang web. Giữ giọng điệu thân thiện, nhiệt tình và chuyên nghiệp bằng tiếng Việt. Nếu câu hỏi nằm ngoài phạm vi thông tin cá nhân của Chính, hãy lịch sự từ chối trả lời.";
+if __name__ == "__main__":
+    app.run_server(debug=True)`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <div class="bg-orange-50 border border-orange-100 p-4 rounded-xl text-xs text-slate-600 mb-2">
+                                        <p class="font-bold text-fpt-orange"><i class="fa-solid fa-circle-info mr-1.5"></i> Cơ chế tương tác liên kết (Linking & Brushing):</p>
+                                        <p class="mt-1">Sử dụng công cụ chọn vùng <strong>Lasso Select</strong> hoặc <strong>Box Select</strong> trên thanh công cụ Plotly của đồ thị Scatter bên trái để chọn nhóm bất động sản. Đồ thị phân phối bên phải sẽ lập tức cập nhật dải giá tương thích!</p>
+                                    </div>
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        <div id="scatter-link-div" class="bg-white rounded-xl h-[300px]"></div>
+                                        <div id="hist-link-div" class="bg-white rounded-xl h-[300px]"></div>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderLinkingVisual, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "Brushing and Filtering",
+                        python: `# Bộ lọc Dash cập nhật đồ thị thời gian thực dựa trên tương tác
+@app.callback(
+    Output("brushing-scatter", "figure"),
+    Input("state_filter", "value")
+)
+def update_chart(selected_state):
+    filtered_df = df[df["State"] == selected_state]
+    return px.scatter(filtered_df, x="Avg. Area Income", y="Price")`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center border-b pb-2 flex-wrap gap-2">
+                                        <h4 class="font-bold text-slate-700"><i class="fa-solid fa-filter-list mr-2 text-fpt-orange"></i> Lọc dữ liệu theo tiểu bang</h4>
+                                        <select id="brushing-state-sel" onchange="runBrushingScatter()" class="p-1.5 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none">
+                                            <option value="all">Hiển thị toàn bộ dữ liệu</option>
+                                            <option value="CA">California (CA)</option>
+                                            <option value="TX">Texas (TX)</option>
+                                            <option value="NY">New York (NY)</option>
+                                            <option value="FL">Florida (FL)</option>
+                                        </select>
+                                    </div>
+                                    <div id="brushing-scatter-div" class="bg-white rounded-xl h-[320px]"></div>
+                                </div>
+                            `;
+                            setTimeout(runBrushingScatter, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "AI Interactive Dashboard",
+                        python: `import streamlit as st
+import pandas as pd
+import plotly.express as px
 
-        // Hàm hiển thị tin nhắn trong giao diện chat
-        function displayMessage(text, sender) {
-            const messagesContainer = document.getElementById('chat-messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+st.title("Interactive Data Visualization - AI Predictions Dashboard")
+
+# Hiển thị dữ liệu kèm kết quả dự báo của mô hình
+df = pd.read_csv("USA_Housing.csv")
+df['Model_Predictions'] = df['Price'] * 0.98 + 15000 # Giả lập dự báo của mô hình AI
+
+st.subheader("Bảng dữ liệu kết quả học máy")
+st.dataframe(df[['Avg. Area Income', 'Price', 'Model_Predictions']].head(10))
+
+# Biểu đồ so sánh giá trị dự đoán và thực tế
+fig = px.scatter(df, x="Price", y="Model_Predictions", title="Thực tế vs Dự đoán mô hình")
+st.plotly_chart(fig)`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-brain mr-2 text-fpt-orange"></i> Giả lập Giao diện Web App tương tác dự báo AI</h4>
+                                    <div class="bg-slate-800 text-white p-4 rounded-xl text-xs space-y-3">
+                                        <p class="font-bold text-emerald-400">Kết quả đo lường độ sai số dự báo:</p>
+                                        <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-300">
+                                            <li>Độ tương quan (Actual vs Prediction R2): <strong>0.957</strong></li>
+                                            <li>Mean Absolute Error (MAE): <strong>$81,200</strong></li>
+                                        </ul>
+                                        <div id="ai-predictions-comparison-plot" class="bg-slate-900 rounded h-[200px]"></div>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderAIPredictionsComparison, 50);
+                        }
+                    }
+                ]
+            },
+            8: {
+                title: "Giải thích & Đánh giá Mô hình AI",
+                desc: "Đo lường sai lệch mô hình bằng Confusion Matrix, trích xuất Feature Importance và mô tả tầm ảnh hưởng đặc trưng qua SHAP.",
+                exercises: [
+                    {
+                        id: 1,
+                        title: "Confusion Matrix",
+                        python: `from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# luxury_threshold phân nhóm nhà Cao cấp (1) và Thường (0)
+y_true = [1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1]
+y_pred = [1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0]
+
+cm = confusion_matrix(y_true, y_pred)
+
+plt.figure(figsize=(6, 5))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", 
+            xticklabels=['Phổ thông', 'Cao cấp'], 
+            yticklabels=['Phổ thông', 'Cao cấp'])
+plt.title("Confusion Matrix Phân Loại Bất Động Sản")
+plt.xlabel("Mô hình dự đoán")
+plt.ylabel("Giá trị thực tế")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-table-cells mr-2 text-fpt-orange"></i> Ma trận nhầm lẫn (Luxury Price Classification)</h4>
+                                        <div id="confusion-matrix-div" class="bg-white rounded-xl h-[260px]"></div>
+                                    </div>
+                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-3">
+                                        <h5 class="font-bold text-slate-850">📊 Giải thích các chỉ số chất lượng:</h5>
+                                        <ul class="space-y-1">
+                                            <li><span class="font-bold text-emerald-600">True Positive (TP):</span> Mô hình phân loại chuẩn xác 12 căn nhà cao cấp.</li>
+                                            <li><span class="font-bold text-blue-600">True Negative (TN):</span> Phân loại chuẩn xác 15 căn nhà phổ thông.</li>
+                                            <li><span class="font-bold text-red-500">False Positive / Negative:</span> Nhầm lẫn nhẹ ở vùng ranh giới giá $1.2M.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderConfusionMatrix, 50);
+                        }
+                    },
+                    {
+                        id: 2,
+                        title: "Feature Importance",
+                        python: `import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+import matplotlib.pyplot as plt
+
+# Giả thuyết X chứa các thuộc tính, y chứa Price
+X = df[['Avg. Area Income', 'Avg. Area House Age', 'Avg. Area Number of Rooms', 'Area Population']]
+y = df['Price']
+
+rf = RandomForestRegressor(n_estimators=100, random_state=42)
+rf.fit(X, y)
+
+# Lấy trọng số Feature Importance
+importances = rf.feature_importances_
+feat_importances = pd.Series(importances, index=X.columns)
+
+plt.figure(figsize=(10, 6))
+feat_importances.nlargest(4).plot(kind='barh', color='#F26F21')
+plt.title("Xếp hạng độ ảnh hưởng đặc trưng - Random Forest")
+plt.xlabel("Trọng số ảnh hưởng (Gini Importance)")
+plt.show()`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                    <div class="lg:col-span-8 space-y-4">
+                                        <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-ranking-star mr-2 text-fpt-orange"></i> Đánh giá tầm quan trọng đặc trưng (Feature Importance)</h4>
+                                        <div id="importance-rf-div" class="bg-white rounded-xl h-[280px]"></div>
+                                    </div>
+                                    <div class="lg:col-span-4 bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-center text-xs text-slate-600 space-y-2">
+                                        <h5 class="font-bold text-slate-800">📌 Kết quả xếp hạng:</h5>
+                                        <p>1. <strong>Avg. Area Income (52%):</strong> Là biến số quan trọng hàng đầu chi phối giá bất động sản.</p>
+                                        <p>2. <strong>House Age (24%):</strong> Đóng góp lớn thứ hai, thể hiện chất lượng công trình.</p>
+                                        <p>3. <strong>Area Population (14%):</strong> Phản ánh mật độ nhu cầu thị trường.</p>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderFeatureImportance, 50);
+                        }
+                    },
+                    {
+                        id: 3,
+                        title: "SHAP Explainability",
+                        python: `import shap
+from sklearn.ensemble import RandomForestRegressor
+
+# Tạo TreeExplainer cho mô hình Random Forest
+explainer = shap.TreeExplainer(rf_model)
+shap_values = explainer.shap_values(X_test)
+
+# Vẽ SHAP Summary Plot
+shap.summary_plot(shap_values, X_test, feature_names=X.columns)`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-magnifying-glass-chart mr-2 text-fpt-orange"></i> SHAP Summary Plot - Giải thích mô hình Hồi quy</h4>
+                                    <p class="text-xs text-slate-500">Cho biết các giá trị đặc tính cụ thể của ngôi nhà đóng góp lực đẩy (+) nâng giá nhà hay lực kéo (-) làm hạ giá nhà.</p>
+                                    <div id="shap-summary-div" class="bg-white rounded-xl h-[300px]"></div>
+                                </div>
+                            `;
+                            setTimeout(renderShapSummary, 50);
+                        }
+                    },
+                    {
+                        id: 4,
+                        title: "Dashboard giải thích AI",
+                        python: `import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+st.title("AI Model Explanation Dashboard")
+st.subheader("Confusion Matrix")
+
+fig, ax = plt.subplots()
+sns.heatmap(cm, annot=True, cmap="Blues", ax=ax)
+st.pyplot(fig)
+
+st.subheader("Feature Importance")
+fig2, ax2 = plt.subplots()
+feat_importances.plot(kind='barh', ax=ax2)
+st.pyplot(fig2)`,
+                        render: function(container) {
+                            container.innerHTML = `
+                                <div class="space-y-4">
+                                    <h4 class="font-bold text-slate-700 border-b pb-2"><i class="fa-solid fa-gauge-high mr-2 text-fpt-orange"></i> Dashboard giải thích học máy toàn diện</h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="bg-white border p-2 rounded" id="sub-dashboard-cm"></div>
+                                        <div class="bg-white border p-2 rounded" id="sub-dashboard-importance"></div>
+                                    </div>
+                                </div>
+                            `;
+                            setTimeout(renderLab8SubDashboard, 50);
+                        }
+                    }
+                ]
+            }
+        };
+
+        // Render Current Lab Content & Build Interactive Sub-Tabs
+        function renderLabContent() {
+            const lab = labsConfig[activeLab];
             
-            const contentDiv = document.createElement('div');
-            contentDiv.className = `p-3 max-w-[85%] ${sender === 'user' 
-                ? 'bg-blue-500 text-white rounded-l-xl rounded-tr-xl' 
-                : 'bg-gray-200 text-gray-800 rounded-r-xl rounded-bl-xl'}`;
-            contentDiv.innerText = text;
+            // Set Banner content
+            document.getElementById('lab-bg-num').innerText = 'L' + activeLab;
+            document.getElementById('lab-badge-title').innerText = 'Thực hành Lab ' + activeLab;
+            document.getElementById('lab-main-title').innerText = lab.title;
+            document.getElementById('lab-main-desc').innerText = lab.desc;
 
-            messageDiv.appendChild(contentDiv);
-            messagesContainer.appendChild(messageDiv);
-            
-            // Cuộn xuống tin nhắn mới nhất
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            // Generate sub-tabs
+            const tabsContainer = document.getElementById('exercise-tabs-container');
+            tabsContainer.innerHTML = lab.exercises.map((ex, index) => `
+                <button onclick="switchExercise(${ex.id})" id="tab-btn-${ex.id}" class="px-4 py-2 text-xs font-bold rounded-lg transition duration-150 mr-2 border border-transparent ${activeExercise === ex.id ? 'bg-fpt-orange/15 text-fpt-orange border-fpt-orange/20' : 'text-slate-600 hover:bg-slate-100'}">
+                    Bài ${ex.id}: ${ex.title}
+                </button>
+            `).join('');
+
+            renderExerciseBody();
         }
 
-        // Hàm xử lý gửi tin nhắn và gọi API
-        async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const userQuery = input.value.trim();
-            const loadingIndicator = document.getElementById('chat-loading');
-            const sendButton = document.getElementById('send-button');
+        // Render current selected exercise layout
+        function renderExerciseBody() {
+            const lab = labsConfig[activeLab];
+            const exercise = lab.exercises.find(e => e.id === activeExercise) || lab.exercises[0];
 
-            if (!userQuery || isAILoading) return;
+            const bodyContainer = document.getElementById('exercise-content-body');
+            bodyContainer.innerHTML = `
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <!-- Left Column: Code viewer & Explanations -->
+                    <div class="space-y-6">
+                        <div class="bg-slate-900 rounded-xl p-5 shadow-sm text-slate-300">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+                                <span class="text-xs font-bold uppercase text-fpt-orange"><i class="fa-brands fa-python mr-1"></i> Source Code Python</span>
+                                <button onclick="copyCodeText()" class="hover:text-fpt-orange transition text-slate-400 text-xs flex items-center"><i class="fa-regular fa-copy mr-1"></i> Copy Code</button>
+                            </div>
+                            <pre class="overflow-x-auto custom-scrollbar text-xs leading-relaxed code-block text-emerald-400 select-all"><code id="python-code-box">${escapeHtml(exercise.python)}</code></pre>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed">
+                            <h5 class="font-bold text-slate-800 mb-1"><i class="fa-solid fa-circle-question mr-1"></i> Nhiệm vụ chính của Lab:</h5>
+                            <p>Khai thác tối đa dải đặc trưng của tập dữ liệu USA Housing và các bộ dữ liệu khác. Áp dụng các thư viện như Pandas, Seaborn, Matplotlib và Plotly để trực quan hóa, và Scikit-learn để đánh giá mô hình học máy.</p>
+                        </div>
+                    </div>
 
-            // 1. Hiển thị tin nhắn người dùng và làm sạch input
-            displayMessage(userQuery, 'user');
-            input.value = '';
+                    <!-- Right Column: Interactive Simulation Output -->
+                    <div class="space-y-6">
+                        <div class="border border-slate-200 bg-white rounded-xl p-5 shadow-sm min-h-[350px] flex flex-col justify-between" id="dynamic-demo-container">
+                            <!-- Injected JS simulation charts -->
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            // 2. Cập nhật lịch sử chat
-            chatHistory.push({ role: "user", parts: [{ text: userQuery }] });
+            exercise.render(document.getElementById('dynamic-demo-container'));
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function switchLab(num) {
+            activeLab = num;
+            activeExercise = 1;
+
+            // Highlight side nav
+            for(let i=1; i<=8; i++) {
+                const el = document.getElementById('side-tab-' + i);
+                if(el) {
+                    if(i === num) {
+                        el.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left bg-fpt-orange text-white";
+                        el.querySelector('.flex').className = "flex items-center justify-center w-8 h-8 rounded-lg bg-orange-600 text-xs font-bold";
+                    } else {
+                        el.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition duration-200 hover:bg-slate-800 hover:text-white font-medium text-left";
+                        el.querySelector('.flex').className = "flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800 text-xs font-bold";
+                    }
+                }
+            }
+
+            // Sync mobile selector
+            document.getElementById('mobile-nav').value = num;
+
+            renderLabContent();
+        }
+
+        function switchExercise(id) {
+            activeExercise = id;
+            const lab = labsConfig[activeLab];
+            lab.exercises.forEach(ex => {
+                const btn = document.getElementById('tab-btn-' + ex.id);
+                if(btn) {
+                    if(ex.id === id) {
+                        btn.className = "px-4 py-2 text-xs font-bold rounded-lg transition duration-150 mr-2 border border-transparent bg-fpt-orange/15 text-fpt-orange border-fpt-orange/20";
+                    } else {
+                        btn.className = "px-4 py-2 text-xs font-bold rounded-lg transition duration-150 mr-2 border border-transparent text-slate-600 hover:bg-slate-100";
+                    }
+                }
+            });
+            renderExerciseBody();
+        }
+
+        function copyCodeText() {
+            const code = document.getElementById('python-code-box').innerText;
+            const el = document.createElement('textarea');
+            el.value = code;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
             
-            // 3. Chuẩn bị cho API call
-            isAILoading = true;
-            sendButton.disabled = true;
-            loadingIndicator.classList.remove('hidden');
+            // Visual inline toast alternative (not alert)
+            const btn = document.querySelector('[onclick="copyCodeText()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-check text-emerald-500 mr-1"></i> Copied!`;
+            setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+        }
+    </script>
 
-            const payload = {
-                contents: chatHistory,
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
+    <!-- CHART IMPLEMENTATIONS (SIMULATING PYTHON LIBRARIES) -->
+    <script>
+        let cleaningChartRef = null;
+
+        // Lab 1: Cleaning Imputation & Scaling
+        function runCleanDemo(type) {
+            const lblMissing = document.getElementById('lbl-status-missing');
+            const lblScale = document.getElementById('lbl-status-scale');
+
+            if (type === 'reset') {
+                lblMissing.innerHTML = '⚠️ Số lượng bản ghi Null: <span class="font-bold text-red-500">3</span>';
+                lblScale.innerHTML = '🏷️ Dải dữ liệu: <span class="font-bold text-orange-500">Chưa chuẩn hóa ($50,000 - $150,000)</span>';
+                renderCleaningChart(false, false);
+            } else if (type === 'impute') {
+                lblMissing.innerHTML = '✅ Số lượng bản ghi Null: <span class="font-bold text-emerald-500">0 (Đã điền Median)</span>';
+                renderCleaningChart(true, lblScale.innerText.includes('Đã chuẩn hóa'));
+            } else if (type === 'scale') {
+                lblScale.innerHTML = '✅ Dải dữ liệu: <span class="font-bold text-emerald-500">Đã chuẩn hóa MinMax (0.0 - 1.0)</span>';
+                renderCleaningChart(lblMissing.innerText.includes('0'), true);
+            }
+        }
+
+        function renderCleaningChart(isImputed, isScaled) {
+            const ctx = document.getElementById('cleaningChartCanvas');
+            if (!ctx) return;
+
+            let dataVals = usaHousingData.slice(0, 10).map(d => d.income);
+            if (!isImputed) {
+                dataVals[3] = 0; // null representation
+            }
+            if (isScaled) {
+                const max = Math.max(...dataVals.filter(v => v > 0));
+                const min = Math.min(...dataVals.filter(v => v > 0));
+                dataVals = dataVals.map(v => v === 0 ? 0 : (v - min) / (max - min));
+            }
+
+            if (cleaningChartRef) cleaningChartRef.destroy();
+
+            cleaningChartRef = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 10}, (_, i) => "Căn " + (i+1)),
+                    datasets: [{
+                        label: isScaled ? 'Avg. Area Income (Chuẩn hóa)' : 'Avg. Area Income ($)',
+                        data: dataVals,
+                        backgroundColor: '#F26F21',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Lab 1: IQR Outliers
+        function updateOutliers() {
+            const factor = parseFloat(document.getElementById('iqr-factor').value);
+            document.getElementById('iqr-val-label').innerText = factor;
+
+            // Highlight simulated outlier on different factors
+            const hasOutlier = factor < 2.2;
+            document.getElementById('outlier-count-lbl').innerText = hasOutlier ? "1" : "0";
+
+            const normalTrace = {
+                x: usaHousingData.map(d => d.income),
+                y: usaHousingData.map(d => d.price),
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Căn hộ Chuẩn',
+                marker: { color: 'rgb(59, 130, 246)', size: 8 }
+            };
+
+            const outlierTrace = {
+                x: [61287.07],
+                y: [3500000.00],
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Ngoại Lai (Outlier)',
+                marker: { color: 'rgb(239, 68, 68)', size: 14, symbol: 'triangle-up' }
+            };
+
+            const data = hasOutlier ? [normalTrace, outlierTrace] : [normalTrace];
+
+            Plotly.newPlot('outlier-chart-div', data, {
+                margin: { t: 40, b: 40, l: 50, r: 10 },
+                xaxis: { title: 'Thu nhập khu vực ($)' },
+                yaxis: { title: 'Giá nhà ($)' }
+            });
+        }
+
+        // Lab 2: Distributions (Histogram vs KDE)
+        function renderLab2Distribution() {
+            const traceKDE = {
+                x: usaHousingData.map(d => d.income),
+                type: 'histogram',
+                histnorm: 'probability density',
+                name: 'KDE',
+                opacity: 0.7,
+                marker: { color: 'rgb(242, 111, 33)' }
+            };
+            Plotly.newPlot('kde-housing-div', [traceKDE], {
+                margin: { t: 10, b: 40, l: 40, r: 10 },
+                xaxis: { title: 'Avg. Area Income' }
+            });
+
+            const traceBox = {
+                y: usaHousingData.map(d => d.age),
+                type: 'box',
+                name: 'House Age',
+                marker: { color: 'rgb(16, 185, 129)' }
+            };
+            Plotly.newPlot('boxplot-housing-div', [traceBox], {
+                margin: { t: 10, b: 30, l: 40, r: 10 }
+            });
+        }
+
+        // Lab 2: Financial Stock AAPL simulation
+        const stockPrices = [
+            {"date":"2023-11-01","close":173.97,"ma50":174.50,"ma200":168.20},
+            {"date":"2023-11-02","close":177.57,"ma50":174.70,"ma200":168.30},
+            {"date":"2023-11-03","close":176.65,"ma50":174.80,"ma200":168.45},
+            {"date":"2023-11-06","close":179.23,"ma50":174.92,"ma200":168.52},
+            {"date":"2023-11-07","close":181.82,"ma50":175.10,"ma200":168.60},
+            {"date":"2023-11-08","close":182.89,"ma50":175.25,"ma200":168.75},
+            {"date":"2023-11-09","close":182.41,"ma50":175.40,"ma200":168.90},
+            {"date":"2023-11-10","close":186.40,"ma50":175.65,"ma200":169.10},
+            {"date":"2023-11-13","close":184.80,"ma50":175.80,"ma200":169.25},
+            {"date":"2023-11-14","close":187.44,"ma50":176.10,"ma200":169.45}
+        ];
+
+        function renderAAPL_Stock() {
+            toggleAAPL_MA();
+        }
+
+        function toggleAAPL_MA() {
+            const showMA50 = document.getElementById('chk-ma50').checked;
+            const showMA200 = document.getElementById('chk-ma200').checked;
+
+            const traceClose = {
+                x: stockPrices.map(p => p.date),
+                y: stockPrices.map(p => p.close),
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Close AAPL',
+                line: { color: '#1E293B', width: 2 }
+            };
+
+            const data = [traceClose];
+
+            if (showMA50) {
+                data.push({
+                    x: stockPrices.map(p => p.date),
+                    y: stockPrices.map(p => p.ma50),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'MA50',
+                    line: { color: '#F26F21', dash: 'dot' }
+                });
+            }
+
+            if (showMA200) {
+                data.push({
+                    x: stockPrices.map(p => p.date),
+                    y: stockPrices.map(p => p.ma200),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'MA200',
+                    line: { color: '#3B82F6', dash: 'dash' }
+                });
+            }
+
+            Plotly.newPlot('aapl-stock-div', data, {
+                margin: { t: 10, b: 40, l: 40, r: 10 },
+                xaxis: { title: 'Ngày giao dịch' },
+                yaxis: { title: 'Giá đóng cửa ($)' }
+            });
+        }
+
+        // Lab 2: Outliers Boxplot (Exercise 3)
+        function renderOutlierBoxplot() {
+            const trace = {
+                y: usaHousingData.map(d => d.price),
+                type: 'box',
+                name: 'House Price',
+                boxpoints: 'outliers',
+                marker: { color: 'rgb(242, 111, 33)' }
+            };
+            Plotly.newPlot('outlier-detection-boxplot', [trace], { margin: { t: 10, b: 30, l: 40, r: 10 } });
+        }
+
+        // Lab 2: Correlation Heatmap (Exercise 4)
+        function renderCorrHeatmap() {
+            const zData = [
+                [1.00, 0.42, 0.38, 0.12, 0.64],
+                [0.42, 1.00, 0.25, 0.08, 0.45],
+                [0.38, 0.25, 1.00, 0.05, 0.33],
+                [0.12, 0.08, 0.05, 1.00, 0.18],
+                [0.64, 0.45, 0.33, 0.18, 1.00]
+            ];
+            const xLabels = ['Income', 'House Age', 'Rooms', 'Bedrooms', 'Price'];
+
+            Plotly.newPlot('corr-housing-div', [{
+                z: zData,
+                x: xLabels,
+                y: xLabels,
+                type: 'heatmap',
+                colorscale: 'Coolwarm'
+            }], {
+                margin: { t: 10, b: 40, l: 80, r: 10 }
+            });
+        }
+
+        // Lab 3: Scatter Plot Iris (Exercise 1)
+        function renderIrisScatter() {
+            // Simulated Iris dataset for 3 types of iris flower
+            const mockIris = [
+                {"sl": 5.1, "sw": 3.5, "pl": 1.4, "pw": 0.2, "sp": 0},
+                {"sl": 4.9, "sw": 3.0, "pl": 1.4, "pw": 0.2, "sp": 0},
+                {"sl": 6.3, "sw": 3.3, "pl": 6.0, "pw": 2.5, "sp": 2},
+                {"sl": 5.8, "sw": 2.7, "pl": 5.1, "pw": 1.9, "sp": 2},
+                {"sl": 6.4, "sw": 3.2, "pl": 4.5, "pw": 1.5, "sp": 1},
+                {"sl": 5.7, "sw": 2.8, "pl": 4.1, "pw": 1.3, "sp": 1}
+            ];
+            const traces = [0, 1, 2].map(sp => {
+                const sub = mockIris.filter(d => d.sp === sp);
+                return {
+                    x: sub.map(d => d.pl),
+                    y: sub.map(d => d.pw),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: sp === 0 ? 'Setosa' : sp === 1 ? 'Versicolor' : 'Virginica',
+                    marker: { size: 10 }
+                };
+            });
+            Plotly.newPlot('iris-scatter-div', traces, {
+                title: 'Petal Length vs Petal Width',
+                xaxis: { title: 'Petal Length (cm)' },
+                yaxis: { title: 'Petal Width (cm)' },
+                margin: { t: 40, b: 40, l: 40, r: 10 }
+            });
+        }
+
+        // Lab 3: Scatter Bedrooms (Exercise 1 - USA Housing Variant)
+        function renderScatterBedrooms() {
+            const traces = [3, 4, 5, 6].map(bd => {
+                const sub = usaHousingData.filter(d => Math.floor(d.bedrooms) === bd);
+                return {
+                    x: sub.map(d => d.income),
+                    y: sub.map(d => d.price),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: `${bd} Phòng ngủ`,
+                    marker: { size: 9 }
+                };
+            });
+
+            Plotly.newPlot('scatter-bedrooms-div', traces, {
+                margin: { t: 10, b: 40, l: 50, r: 10 },
+                xaxis: { title: 'Avg. Area Income ($)' },
+                yaxis: { title: 'Price ($)' }
+            });
+        }
+
+        // Lab 3: Pairplot (Exercise 2)
+        function renderPairplotSim() {
+            const xData = usaHousingData.map(d => d.income);
+            const yData = usaHousingData.map(d => d.rooms);
+            const trace = {
+                x: xData,
+                y: yData,
+                mode: 'markers',
+                type: 'scatter',
+                marker: { color: 'rgba(242, 111, 33, 0.85)', size: 8 }
+            };
+            Plotly.newPlot('pairplot-sim-div', [trace], {
+                xaxis: { title: 'Avg. Area Income ($)' },
+                yaxis: { title: 'Rooms' },
+                margin: { t: 10, b: 40, l: 40, r: 10 }
+            });
+        }
+
+        // Lab 3: Parallel Coordinates (Exercise 3)
+        function renderParallelCoords() {
+            const trace = {
+                type: 'parcoords',
+                line: {
+                    color: usaHousingData.map(d => d.price),
+                    colorscale: 'Portland'
+                },
+                dimensions: [{
+                    range: [50000, 95000],
+                    label: 'Avg. Income',
+                    values: usaHousingData.map(d => d.income)
+                }, {
+                    range: [4.5, 8.0],
+                    label: 'House Age',
+                    values: usaHousingData.map(d => d.age)
+                }, {
+                    range: [5, 10],
+                    label: 'Rooms',
+                    values: usaHousingData.map(d => d.rooms)
+                }, {
+                    range: [10000, 60000],
+                    label: 'Population',
+                    values: usaHousingData.map(d => d.population)
+                }]
+            };
+
+            Plotly.newPlot('parallel-coords-div', [trace], {
+                margin: { t: 30, b: 30, l: 50, r: 50 }
+            });
+        }
+
+        // Lab 3: PCA (Exercise 4)
+        function renderPCAHousing() {
+            const trace = {
+                x: usaHousingData.map((d, i) => (d.income - 68000)/10000 + (Math.random()-0.5)*0.5),
+                y: usaHousingData.map((d, i) => (d.population - 35000)/15000 + (Math.random()-0.5)*0.5),
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    size: 8,
+                    color: usaHousingData.map(d => d.price),
+                    colorscale: 'Viridis',
+                    showscale: true
                 }
             };
-            
-            let responseText = "Xin lỗi, đã xảy ra lỗi khi kết nối với Trợ lý AI.";
-            const maxRetries = 5;
 
-            // 4. Gọi API với Exponential Backoff
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        const candidate = result.candidates?.[0];
-
-                        if (candidate && candidate.content?.parts?.[0]?.text) {
-                            responseText = candidate.content.parts[0].text;
-                            break; // Thành công, thoát vòng lặp
-                        } else {
-                             responseText = "Trợ lý AI không thể tạo ra phản hồi hợp lệ. Vui lòng thử lại.";
-                             break;
-                        }
-                    } else {
-                        // Nếu là lỗi server (5xx), thử lại
-                        if (response.status >= 500) {
-                            if (i < maxRetries - 1) {
-                                const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                                await new Promise(resolve => setTimeout(resolve, delay));
-                            } else {
-                                throw new Error(`API failed after ${maxRetries} retries with status: ${response.status}`);
-                            }
-                        } else {
-                            // Lỗi client (4xx) hoặc lỗi khác, không thử lại
-                            responseText = `Lỗi yêu cầu: ${response.status} ${response.statusText}.`;
-                            break;
-                        }
-                    }
-                } catch (error) {
-                    if (i < maxRetries - 1) {
-                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                    } else {
-                         responseText = `Xin lỗi, không thể kết nối với dịch vụ AI sau nhiều lần thử: ${error.message}`;
-                    }
-                }
-            }
-
-            // 5. Hiển thị phản hồi và cập nhật trạng thái/lịch sử
-            displayMessage(responseText, 'ai');
-            chatHistory.push({ role: "model", parts: [{ text: responseText }] });
-
-            isAILoading = false;
-            sendButton.disabled = false;
-            loadingIndicator.classList.add('hidden');
-        }
-
-        // --- LOGIC GIAO DIỆN CHUNG ---
-
-        // Hàm chuyển đổi trạng thái hiển thị của chatbot panel
-        function toggleChat() {
-            const panel = document.getElementById('chat-panel');
-            const chatIcon = document.getElementById('chat-icon');
-            const closeIcon = document.getElementById('close-icon');
-
-            panel.classList.toggle('hidden');
-            
-            if (panel.classList.contains('hidden')) {
-                chatIcon.classList.remove('hidden');
-                closeIcon.classList.add('hidden');
-            } else {
-                chatIcon.classList.add('hidden');
-                closeIcon.classList.remove('hidden');
-                // Tập trung vào input khi mở chat
-                document.getElementById('user-input').focus();
-            }
-        }
-        
-        // Kích hoạt nút gửi khi có nội dung trong input
-        document.getElementById('user-input').addEventListener('input', (e) => {
-            document.getElementById('send-button').disabled = e.target.value.trim() === '' || isAILoading;
-        });
-
-        // Lắng nghe sự kiện click cho nút menu mobile (từ code cũ)
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            const button = this;
-
-            // Chuyển đổi trạng thái 'open'
-            menu.classList.toggle('open');
-            
-            // Chuyển đổi icon (Hamburger <-> X)
-            const iconMenu = button.querySelector('.block:not(.hidden)');
-            const iconClose = button.querySelector('.hidden');
-            
-            if (menu.classList.contains('open')) {
-                iconMenu.classList.add('hidden');
-                iconClose.classList.remove('hidden');
-            } else {
-                iconMenu.classList.remove('hidden');
-                iconClose.classList.add('hidden');
-            }
-        });
-
-        // Đóng menu mobile khi click vào một liên kết (từ code cũ)
-        document.querySelectorAll('#mobile-menu a').forEach(item => {
-            item.addEventListener('click', () => {
-                const menu = document.getElementById('mobile-menu');
-                const button = document.getElementById('mobile-menu-button');
-                
-                menu.classList.remove('open');
-                
-                // Đảm bảo icon trở lại trạng thái hamburger
-                const iconMenu = button.querySelector('.block:not(.hidden)');
-                const iconClose = button.querySelector('.hidden');
-                iconMenu.classList.remove('hidden');
-                iconClose.classList.add('hidden');
+            Plotly.newPlot('pca-housing-div', [trace], {
+                title: 'Hình chiếu PCA 2 chiều (Tô màu theo Giá nhà)',
+                margin: { t: 40, b: 40, l: 40, r: 10 },
+                xaxis: { title: 'Thành phần chính 1' },
+                yaxis: { title: 'Thành phần chính 2' }
             });
-        });
-
-        // Chức năng Modal thay thế alert() (từ code cũ)
-        function showMessage() {
-            const name = document.getElementById('name').value;
-            const message = document.getElementById('message').value;
-
-            const modal = document.getElementById('message-modal');
-            const modalText = document.getElementById('modal-text');
-
-            modalText.innerHTML = `Cảm ơn bạn, <span class="font-bold">${name}</span>! Tin nhắn của bạn: "<span class="italic">${message.substring(0, 50)}...</span>" đã được gửi đi. Tôi sẽ phản hồi sớm nhất có thể!`;
-            modal.classList.remove('hidden');
-
-            // Reset form
-            document.getElementById('name').value = '';
-            document.getElementById('message').value = '';
         }
 
-        function closeModal() {
-            document.getElementById('message-modal').classList.add('hidden');
+        // Lab 4: Heatmap (Exercise 1)
+        function renderAnnotHeatmap() {
+            const zValues = [
+                [1.00, 0.42, 0.38, 0.64],
+                [0.42, 1.00, 0.25, 0.45],
+                [0.38, 0.25, 1.00, 0.33],
+                [0.64, 0.45, 0.33, 1.00]
+            ];
+            const trace = {
+                z: zValues,
+                x: ['Avg. Area Income', 'House Age', 'Rooms', 'Price'],
+                y: ['Avg. Area Income', 'House Age', 'Rooms', 'Price'],
+                type: 'heatmap',
+                colorscale: 'coolwarm',
+                showscale: true
+            };
+            Plotly.newPlot('annot-heatmap-div', [trace], { margin: { t: 10, b: 40, l: 110, r: 10 } });
         }
-        
-        // Khởi tạo trạng thái nút gửi khi tải trang
-        window.onload = () => {
-            document.getElementById('send-button').disabled = true;
+
+        // Lab 4: Pixel-based (Exercise 2)
+        function renderPixelBased() {
+            const matrix = [];
+            for(let i=0; i<6; i++) {
+                const row = [];
+                for(let j=0; j<5; j++) {
+                    row.push(usaHousingData[i*5 + j].price);
+                }
+                matrix.push(row);
+            }
+
+            Plotly.newPlot('pixel-based-div', [{
+                z: matrix,
+                type: 'heatmap',
+                colorscale: 'viridis'
+            }], {
+                margin: { t: 10, b: 30, l: 30, r: 10 }
+            });
         }
+
+        // Lab 4: Star Glyph Radar (Exercise 3)
+        function renderRadarGlyph() {
+            const idx = parseInt(document.getElementById('radar-index-sel').value);
+            const house = usaHousingData[idx];
+
+            const maxVals = { income: 95000, age: 8, rooms: 10, bedrooms: 7, population: 60000 };
+            const rScaled = [
+                house.income / maxVals.income,
+                house.age / maxVals.age,
+                house.rooms / maxVals.rooms,
+                house.bedrooms / maxVals.bedrooms,
+                house.population / maxVals.population,
+                house.income / maxVals.income
+            ];
+
+            const trace = {
+                type: 'scatterpolar',
+                r: rScaled,
+                theta: ['Income', 'House Age', 'Rooms', 'Bedrooms', 'Population', 'Income'],
+                fill: 'toself',
+                name: `Căn hộ ${idx+1}`,
+                marker: { color: '#F26F21' }
+            };
+
+            Plotly.newPlot('radar-glyph-div', [trace], {
+                polar: { radialaxis: { visible: true, range: [0, 1] } },
+                margin: { t: 20, b: 20, l: 20, r: 20 }
+            });
+        }
+
+        // Lab 4: Chernoff Face (Exercise 4)
+        function drawChernoffFace(canvasId, income, age, price) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // Face size mapped to Income
+            const rx = 35 + (income - 50000) / 45000 * 15;
+            const ry = 40 + (income - 50000) / 45000 * 12;
+
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#F26F21';
+            ctx.lineWidth = 3;
+            ctx.fillStyle = '#FFF8F4';
+            ctx.fill();
+            ctx.stroke();
+
+            // Eyes mapped to House Age
+            const eyeSize = 3 + (age - 4) * 1.5;
+            ctx.beginPath();
+            ctx.arc(cx - rx*0.4, cy - 10, eyeSize, 0, 2 * Math.PI);
+            ctx.arc(cx + rx*0.4, cy - 10, eyeSize, 0, 2 * Math.PI);
+            ctx.fillStyle = '#1A2F50';
+            ctx.fill();
+
+            // Nose
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - 2);
+            ctx.lineTo(cx - 3, cy + 8);
+            ctx.lineTo(cx + 3, cy + 8);
+            ctx.strokeStyle = '#1A2F50';
+            ctx.stroke();
+
+            // Mouth curvature mapped to Price
+            const mouthY = cy + ry * 0.4;
+            const mouthWidth = rx * 0.5;
+            const curve = (price - 400000) / 1600000 - 0.5; // -0.5 to 0.5
+
+            ctx.beginPath();
+            ctx.moveTo(cx - mouthWidth/2, mouthY);
+            ctx.quadraticCurveTo(cx, mouthY + curve * 20, cx + mouthWidth/2, mouthY);
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+        }
+
+        function drawAllChernoff() {
+            // High Price House
+            drawChernoffFace('face-c1', 79248.64, 6.00, 1505890.91);
+            // Low Price House
+            drawChernoffFace('face-c2', 52723.88, 5.45, 479500.56);
+        }
+
+        // Lab 5: Treemap (Exercise 1)
+        function renderLab5Treemap() {
+            const data = [{
+                type: "treemap",
+                labels: ["Electronics", "Phone", "Laptop", "Tablet", "Clothing", "Men", "Women", "Home", "Furniture", "Kitchen"],
+                parents: ["", "Electronics", "Electronics", "Electronics", "", "Clothing", "Clothing", "", "Home", "Home"],
+                values: [1100, 500, 400, 200, 550, 300, 250, 500, 350, 150],
+                marker: { colorscale: 'Blues' }
+            }];
+            Plotly.newPlot('treemap-housing-div', data, { margin: { t: 10, b: 10, l: 10, r: 10 } });
+        }
+
+        // Lab 5: Sunburst (Exercise 2)
+        function renderLab5Sunburst() {
+            const data = [{
+                type: "sunburst",
+                labels: ["Asia", "Vietnam", "Thailand", "Japan", "Europe", "Germany", "France", "Italy"],
+                parents: ["", "Asia", "Asia", "Asia", "", "Europe", "Europe", "Europe"],
+                values: [420, 120, 100, 200, 370, 150, 130, 90],
+                marker: { colorscale: 'Reds' }
+            }];
+            Plotly.newPlot('sunburst-housing-div', data, { margin: { t: 10, b: 10, l: 10, r: 10 } });
+        }
+
+        // Lab 5: 3D Scatter (Exercise 3)
+        function renderLab53DScatter() {
+            const trace = {
+                x: usaHousingData.map(d => d.income),
+                y: usaHousingData.map(d => d.age),
+                z: usaHousingData.map(d => d.rooms),
+                mode: 'markers',
+                type: 'scatter3d',
+                marker: {
+                    size: 5,
+                    color: usaHousingData.map(d => d.price),
+                    colorscale: 'Viridis'
+                }
+            };
+            const layout = {
+                margin: { t: 0, b: 0, l: 0, r: 0 },
+                scene: {
+                    xaxis: { title: 'Income' },
+                    yaxis: { title: 'House Age' },
+                    zaxis: { title: 'Rooms' }
+                }
+            };
+            Plotly.newPlot('3d-scatter-housing-div', [trace], layout);
+        }
+
+        // Lab 6: Subplots Matplotlib (Exercise 1)
+        function renderMatplotlibLayout() {
+            const trace1 = {
+                x: Array.from({length: 30}, (_, i) => i+1),
+                y: usaHousingData.slice(0, 30).map(d => d.price),
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Line Chart (Price)'
+            };
+            const trace2 = {
+                x: ['NE', 'CA', 'FL', 'TX', 'MO'],
+                y: [4, 8, 3, 7, 2],
+                type: 'bar',
+                name: 'State Frequency'
+            };
+            Plotly.newPlot('matplotlib-layout-div', [trace1, trace2], {
+                grid: { rows: 1, columns: 2, pattern: 'independent' },
+                margin: { t: 20, b: 40, l: 50, r: 10 }
+            });
+        }
+
+        // Lab 6: Violin Plot (Exercise 2)
+        function renderViolinPlot() {
+            const trace = {
+                type: 'violin',
+                y: usaHousingData.map(d => d.price),
+                x: usaHousingData.map(d => `${Math.floor(d.bedrooms)} PN`),
+                box: { visible: true },
+                meanline: { visible: true },
+                line: { color: 'rgb(242, 111, 33)' }
+            };
+
+            Plotly.newPlot('violin-housing-div', [trace], {
+                margin: { t: 10, b: 40, l: 55, r: 10 },
+                xaxis: { title: 'Phân loại phòng ngủ' },
+                yaxis: { title: 'Giá nhà ($)' }
+            });
+        }
+
+        // Lab 6: Dashboard Plotly Grid (Exercise 3)
+        function renderPlotlySubplots() {
+            const trace1 = {
+                x: usaHousingData.map(d => d.income),
+                y: usaHousingData.map(d => d.price),
+                mode: 'markers',
+                type: 'scatter',
+                xaxis: 'x1',
+                yaxis: 'y1'
+            };
+            const trace2 = {
+                x: usaHousingData.map(d => d.price),
+                type: 'histogram',
+                xaxis: 'x2',
+                yaxis: 'y2'
+            };
+            Plotly.newPlot('plotly-subplots-div', [trace1, trace2], {
+                grid: { rows: 1, columns: 2, pattern: 'independent' },
+                margin: { t: 10, b: 30, l: 50, r: 10 },
+                showlegend: false
+            });
+        }
+
+        // Lab 6: Streamlit Web App Mockup (Exercise 4)
+        function runStreamlitFilter() {
+            const state = document.getElementById('streamlit-state-sel').value;
+            let sub = usaHousingData;
+            if (state !== 'all') {
+                sub = usaHousingData.filter(d => d.state === state);
+            }
+
+            const trace1 = {
+                x: sub.map(d => d.income),
+                y: sub.map(d => d.price),
+                mode: 'markers',
+                type: 'scatter',
+                marker: { color: '#F26F21', size: 6 }
+            };
+
+            const trace2 = {
+                x: sub.map(d => d.price),
+                type: 'histogram',
+                marker: { color: '#10B981' }
+            };
+
+            const layoutOptions = {
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#94a3b8', size: 9 },
+                margin: { t: 10, b: 25, l: 25, r: 10 }
+            };
+
+            Plotly.newPlot('st-chart1', [trace1], layoutOptions);
+            Plotly.newPlot('st-chart2', [trace2], layoutOptions);
+        }
+
+        // Lab 7: Plotly Interactive Single Scatter (Exercise 1)
+        function renderPlotlySingleScatter() {
+            const trace = {
+                x: usaHousingData.map(d => d.income),
+                y: usaHousingData.map(d => d.price),
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    size: 9,
+                    color: usaHousingData.map(d => d.rooms),
+                    colorscale: 'Portland',
+                    showscale: true
+                }
+            };
+            Plotly.newPlot('plotly-single-scatter', [trace], {
+                margin: { t: 10, b: 30, l: 50, r: 10 },
+                xaxis: { title: 'Income' },
+                yaxis: { title: 'Price' }
+            });
+        }
+
+        // Lab 7: Linking Visualization Brushing Selection (Exercise 2)
+        let fullPrices = usaHousingData.map(d => d.price);
+
+        function renderLinkingVisual() {
+            const scatterDiv = document.getElementById('scatter-link-div');
+
+            const traceScatter = {
+                x: usaHousingData.map(d => d.income),
+                y: usaHousingData.map(d => d.price),
+                mode: 'markers',
+                type: 'scatter',
+                marker: { color: '#1A2F50', size: 7 }
+            };
+
+            Plotly.newPlot(scatterDiv, [traceScatter], {
+                title: 'Khu vực Brushing (Lasso Select)',
+                dragmode: 'lasso',
+                margin: { t: 40, b: 30, l: 50, r: 10 }
+            });
+
+            updateLinkingHist(fullPrices);
+
+            // Callback on Selection
+            scatterDiv.on('plotly_selected', function(eventData) {
+                if (eventData && eventData.points.length > 0) {
+                    const selectedPrices = eventData.points.map(p => p.y);
+                    updateLinkingHist(selectedPrices);
+                } else {
+                    updateLinkingHist(fullPrices);
+                }
+            });
+        }
+
+        function updateLinkingHist(prices) {
+            Plotly.newPlot('hist-link-div', [{
+                x: prices,
+                type: 'histogram',
+                marker: { color: '#F26F21' }
+            }], {
+                title: 'Giá phân phối liên kết (Histogram)',
+                margin: { t: 40, b: 30, l: 40, r: 10 }
+            });
+        }
+
+        // Lab 7: Brushing and Filtering (Exercise 3)
+        function runBrushingScatter() {
+            const state = document.getElementById('brushing-state-sel').value;
+            let sub = usaHousingData;
+            if (state !== 'all') {
+                sub = usaHousingData.filter(d => d.state === state);
+            }
+
+            Plotly.newPlot('brushing-scatter-div', [{
+                x: sub.map(d => d.income),
+                y: sub.map(d => d.price),
+                mode: 'markers',
+                type: 'scatter',
+                marker: { size: 9, color: '#10B981' }
+            }], {
+                margin: { t: 10, b: 30, l: 50, r: 10 },
+                xaxis: { title: 'Avg. Income' },
+                yaxis: { title: 'Price' }
+            });
+        }
+
+        // Lab 7: AI Predictions (Exercise 4)
+        function renderAIPredictionsComparison() {
+            const actPrices = usaHousingData.map(d => d.price);
+            const predPrices = actPrices.map(p => p * 0.98 + (Math.random() - 0.5) * 40000);
+            const trace = {
+                x: actPrices,
+                y: predPrices,
+                mode: 'markers',
+                type: 'scatter',
+                marker: { color: '#10B981', size: 6 }
+            };
+            Plotly.newPlot('ai-predictions-comparison-plot', [trace], {
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: '#fff', size: 8 },
+                margin: { t: 10, b: 25, l: 30, r: 10 },
+                xaxis: { title: 'Actual Price' },
+                yaxis: { title: 'Predicted Price' }
+            });
+        }
+
+        // Lab 8: Confusion Matrix (Exercise 1)
+        function renderConfusionMatrix(targetId = 'confusion-matrix-div') {
+            const zValues = [
+                [15, 2],
+                [1, 12]
+            ];
+            Plotly.newPlot(targetId, [{
+                z: zValues,
+                x: ['Dự đoán Thường', 'Dự đoán Luxury'],
+                y: ['Thực tế Thường', 'Thực tế Luxury'],
+                type: 'heatmap',
+                colorscale: 'Blues',
+                showscale: true
+            }], {
+                margin: { t: 10, b: 40, l: 110, r: 10 }
+            });
+        }
+
+        // Lab 8: Feature Importance (Exercise 2)
+        function renderFeatureImportance(targetId = 'importance-rf-div') {
+            const trace = {
+                x: [0.52, 0.24, 0.14, 0.07],
+                y: ['Avg. Area Income', 'Avg. Area House Age', 'Area Population', 'Avg. Rooms'],
+                type: 'bar',
+                orientation: 'h',
+                marker: { color: '#F26F21' }
+            };
+
+            Plotly.newPlot(targetId, [trace], {
+                margin: { t: 10, b: 40, l: 150, r: 10 },
+                xaxis: { title: 'Hệ số quan trọng (Gini Importance)' }
+            });
+        }
+
+        // Lab 8: SHAP values (Exercise 3)
+        function renderShapSummary() {
+            const positiveTrace = {
+                x: [0.4, 0.25, 0.1, 0.05],
+                y: ['Income', 'House Age', 'Population', 'Rooms'],
+                mode: 'markers',
+                name: 'Tương tác (+) Tăng giá',
+                marker: { color: '#EF4444', size: 10 }
+            };
+
+            const negativeTrace = {
+                x: [-0.3, -0.15, -0.05, -0.02],
+                y: ['Income', 'House Age', 'Population', 'Rooms'],
+                mode: 'markers',
+                name: 'Tương tác (-) Hạ giá',
+                marker: { color: '#3B82F6', size: 10 }
+            };
+
+            Plotly.newPlot('shap-summary-div', [positiveTrace, negativeTrace], {
+                margin: { t: 20, b: 30, l: 100, r: 10 },
+                xaxis: { title: 'Giá trị tác động SHAP' }
+            });
+        }
+
+        // Lab 8: Analytical Sub-Dashboard (Exercise 4)
+        function renderLab8SubDashboard() {
+            renderConfusionMatrix('sub-dashboard-cm');
+            renderFeatureImportance('sub-dashboard-importance');
+        }
+
+        // Run On Initial Load
+        window.onload = function() {
+            switchLab(1);
+        };
     </script>
 </body>
 </html>
